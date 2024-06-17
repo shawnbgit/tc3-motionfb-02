@@ -1,0 +1,1743 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<project xmlns="http://www.plcopen.org/xml/tc6_0200">
+  <fileHeader companyName="Beckhoff Automation GmbH" productName="TwinCAT PLC Control" productVersion="3.5.13.21" creationDateTime="2024-06-17T10:11:27.1833911" />
+  <contentHeader name="PLC1" modificationDateTime="2024-06-17T10:11:27.1873894">
+    <coordinateInfo>
+      <fbd>
+        <scaling x="1" y="1" />
+      </fbd>
+      <ld>
+        <scaling x="1" y="1" />
+      </ld>
+      <sfc>
+        <scaling x="1" y="1" />
+      </sfc>
+    </coordinateInfo>
+    <addData>
+      <data name="http://www.3s-software.com/plcopenxml/projectinformation" handleUnknown="implementation">
+        <ProjectInformation />
+      </data>
+    </addData>
+  </contentHeader>
+  <types>
+    <dataTypes />
+    <pous />
+  </types>
+  <instances>
+    <configurations />
+  </instances>
+  <addData>
+    <data name="http://www.3s-software.com/plcopenxml/application" handleUnknown="implementation">
+      <resource name="PLC1">
+        <task name="PlcTask" interval="PT0S" priority="20">
+          <pouInstance name="MAIN" typeName="">
+            <documentation>
+              <xhtml xmlns="http://www.w3.org/1999/xhtml" />
+            </documentation>
+          </pouInstance>
+          <addData>
+            <data name="http://www.3s-software.com/plcopenxml/tasksettings" handleUnknown="implementation">
+              <TaskSettings KindOfTask="Cyclic" Interval="10000" IntervalUnit="us">
+                <Watchdog Enabled="false" TimeUnit="ms" />
+              </TaskSettings>
+            </data>
+            <data name="http://www.3s-software.com/plcopenxml/objectid" handleUnknown="discard">
+              <ObjectId>32b43971-3e1d-489c-ae19-af1319d258df</ObjectId>
+            </data>
+          </addData>
+        </task>
+        <addData>
+          <data name="http://www.3s-software.com/plcopenxml/pou" handleUnknown="implementation">
+            <pou name="FB_DriveDecoder" pouType="functionBlock">
+              <interface>
+                <inputVars>
+                  <variable name="nDriveError" address="%I*">
+                    <type>
+                      <UINT />
+                    </type>
+                    <documentation>
+                      <xhtml xmlns="http://www.w3.org/1999/xhtml"> Link to Drive Channel A/B AxisMain Inputs &gt; ErrorCode</xhtml>
+                    </documentation>
+                  </variable>
+                  <variable name="nDriveEcState" address="%I*">
+                    <type>
+                      <UINT />
+                    </type>
+                    <documentation>
+                      <xhtml xmlns="http://www.w3.org/1999/xhtml"> Link to Drive InfoData &gt; State</xhtml>
+                    </documentation>
+                  </variable>
+                  <variable name="nNcError" address="%I*">
+                    <type>
+                      <UDINT />
+                    </type>
+                    <documentation>
+                      <xhtml xmlns="http://www.w3.org/1999/xhtml"> Link to NC Axis &gt; Outputs &gt; ToPlc &gt; ErrorCode</xhtml>
+                    </documentation>
+                  </variable>
+                  <variable name="nDSP402status" address="%I*">
+                    <type>
+                      <UINT />
+                    </type>
+                    <documentation>
+                      <xhtml xmlns="http://www.w3.org/1999/xhtml"> Link to Drive Channel A/B AxisMain Inputs &gt; StatusWord</xhtml>
+                    </documentation>
+                  </variable>
+                </inputVars>
+                <outputVars>
+                  <variable name="sDriveError">
+                    <type>
+                      <string />
+                    </type>
+                    <documentation>
+                      <xhtml xmlns="http://www.w3.org/1999/xhtml"> Drive Hardware Error Message</xhtml>
+                    </documentation>
+                  </variable>
+                  <variable name="sDriveEcState">
+                    <type>
+                      <string />
+                    </type>
+                    <documentation>
+                      <xhtml xmlns="http://www.w3.org/1999/xhtml"> Drive EtherCAT State</xhtml>
+                    </documentation>
+                  </variable>
+                  <variable name="sNcError">
+                    <type>
+                      <string />
+                    </type>
+                    <documentation>
+                      <xhtml xmlns="http://www.w3.org/1999/xhtml"> NC Axis Error Message</xhtml>
+                    </documentation>
+                  </variable>
+                  <variable name="sDSP402status">
+                    <type>
+                      <string />
+                    </type>
+                    <documentation>
+                      <xhtml xmlns="http://www.w3.org/1999/xhtml"> Drive State Machine Status</xhtml>
+                    </documentation>
+                  </variable>
+                </outputVars>
+              </interface>
+              <actions>
+                <action name="_diag">
+                  <body>
+                    <ST>
+                      <xhtml xmlns="http://www.w3.org/1999/xhtml">
+
+CASE nDriveError OF
+
+// Device Main (Power supply)
+	16#3210: sDriveError := '3210 DC link overvoltage';
+	16#4380: sDriveError := '4380 Fan speed seems to be zero.';
+	16#5112: sDriveError := '5112 Supply undervoltage: supply +24V';
+	16#5181: sDriveError := '5181 Power supply controlword';
+	16#5182: sDriveError := '5182 Power supply controlword';
+	16#5183: sDriveError := '5183 Power supply controlword';
+	16#5185: sDriveError := '5185 Power supply controlword';
+	16#5186: sDriveError := '5186 Power supply controlword';
+	16#5192: sDriveError := '5192 Supply overvoltage: supply +24V';
+	16#6320: sDriveError := '6320 Parameter error in Object 0x%x/%x';
+	16#8780: sDriveError := '8780 Configured Sync1 Cycle Time is above Maximum';
+	16#8781: sDriveError := '8781 Configured Sync1 Cycle Time is below Minimum';
+	16#8782: sDriveError := '8782 Configured Sync1 Cycle Time is not a multiple of the Sync0 Cycle Time';
+	16#8783: sDriveError := '8783 Configured Sync0 Cycle Time is not legal';
+	16#A017: sDriveError := 'A017 Pdo Mapping Error: Object has to be mapped always.';
+	
+//standard
+	16#0: 	 sDriveError := '0 No Error';
+	16#5190: sDriveError := '5190 Test 5V supply failed';
+	16#5193: sDriveError := '5193 Need cold start';
+	16#5194: sDriveError := '5194 Obsolete bootloader detected. Please update';
+	16#5580: sDriveError := '5580 Read failure EEPROM';
+	16#5581: sDriveError := '5581 Checksum failure EEPROM';
+	16#5582: sDriveError := '5582 EEPROM contains blank Data';
+	16#5583: sDriveError := '5583 Unexpected EEPROM';
+	16#5584: sDriveError := '5584 EEPROM contains blank Data';
+	16#5585: sDriveError := '5585 Unexpected EEPROM';
+	16#5586: sDriveError := '5586 Restored Errormessages from persistent memory';
+	16#5590: sDriveError := '5590 Detected incompatible Pcb';
+	16#5591: sDriveError := '5591 Identity incompatible to a Pcb';
+	16#5592: sDriveError := '5592 FirmwareIndex is incompatible to this Firmware';
+	16#5593: sDriveError := '5593 Structure Version is incompatible to this Firmware';
+	16#5594: sDriveError := '5594 Simulating persistent data features.';
+	16#5596: sDriveError := '5596 Storing of persistent data failed.';
+	16#5597: sDriveError := '5597 Unsupported prototype hardware.';
+	16#5598: sDriveError := '5598 Identity incompatible to Device';
+	16#5599: sDriveError := '5599 Identity incompatible to a Device';
+	16#559A: sDriveError := '559A Read failure EEPROM';
+	16#559B: sDriveError := '559B Unsupported Pcb type';
+	16#559C: sDriveError := '559C Read failure EEPROM';
+	16#6180: sDriveError := '6180 Internal Software Error Type A';
+	16#6181: sDriveError := '6181 Internal Software Error Type B';
+	16#6182: sDriveError := '6182 Internal Software Error Type C';
+	16#6190: sDriveError := '6190 Init Timeout';
+	16#6382: sDriveError := '6382 Illegal Slotconfiguration';
+	16#6383: sDriveError := '6383 Illegal Slotconfiguration';
+	16#6384: sDriveError := '6384 Illegal Slotconfiguration';
+	16#6385: sDriveError := '6385 Illegal Slotconfiguration. Unsupported Module.';
+	16#63B0: sDriveError := '63B0 Module in slot: Transition Pre-Op to Safe-Op (ECat) not successful';
+	16#63B1: sDriveError := '63B1 Module in slot: Transition Safe-Op to Op (ECat) not successful';
+	16#63B2: sDriveError := '63B2 Module in slot: Transition Op to Safe-Op (ECat) not successful';
+	16#63B3: sDriveError := '63B3 Module in slot: Transition Safe-Op to Pre-Op (ECat) not successful';
+	16#63B4: sDriveError := '63B4 Illegal Slotconfiguration. The selected feedback combination is not supported';
+	16#8180: sDriveError := '8180 System restart or sync lost';
+	16#8181: sDriveError := '8181 Lost Distributed clocks Sync';
+	16#8186: sDriveError := '8186 Invalid sync out unit configuration. Actual value is and has to be';
+	16#A000: sDriveError := ' A000 Transition Pre-Op to Safe-Op not successful';
+	16#A001: sDriveError := ' A001 Transition Pre-Op to Safe-Op not successful';
+	16#A002: sDriveError := ' A002 Transition Pre-Op to Safe-Op not successful';
+	16#A003: sDriveError := ' A003 Transition Pre-Op to Safe-Op not successful';
+	16#A004: sDriveError := ' A004 Sync Manager is disabled and has a Size unequal zero.';
+	16#A005: sDriveError := ' A005 Sync Manager Address is not multiple of 4.';
+	16#A00B: sDriveError := ' A00B Dynamic Sync Manager Address is not multiple of 4.';
+	16#A00C: sDriveError := ' A00C Dynamic Sync Manager Address Range overlap.';
+	16#A00D: sDriveError := ' A00D Dynamic Sync Manager Settings Error.';
+	16#A00E: sDriveError := ' A00E Dynamic Sync Manager Address Error.';
+	16#A00F: sDriveError := ' A00F Dynamic Sync Manager Length Error.';
+	16#A010: sDriveError := ' A010 SDO Complete Access Error: Object 0x%x/%x';
+	16#A011: sDriveError := ' A011 Pdo Mapping Error: Unable to map Object (not possible).';
+	16#A013: sDriveError := ' A013 Pdo Mapping Error: Double Mapping of Object.';
+	16#A015: sDriveError := ' A015 Pdo Mapping Error: Unable to map Object (no Mappings left).';
+	//16#A017: sDriveError := ' A017 Pdo Mapping Error: Object has to be mapped always.';
+	16#A019: sDriveError := ' A019 Pdo Mapping Error: Object has to be mapped because of modes of operation.';
+	16#A01B: sDriveError := ' A01B Pdo BitMapping Error: Object A is not next to Object B.';
+	16#A01D: sDriveError := ' A01D Pdo BitMapping Error: Can not Transform Bit-Mappings to Byte-Mappings.';
+	16#A01F: sDriveError := ' A01F Pdo Mapping Error: Invalid Oversampling Factor.';
+	16#A021: sDriveError := ' A021 Pdo Mapping Error: Oversampling is not allowed.';
+	16#A023: sDriveError := ' A023 Pdo Assignment Error';
+	16#A031: sDriveError := ' A031 DynPdo Mapping Warning: Unable to map Object (not possible).';
+	16#A033: sDriveError := ' A033 DynPdo Mapping Warning: Double Mapping of Object.';
+	16#A035: sDriveError := ' A035 DynPdo Mapping Warning: Unable to map Object (no Mappings left).';
+	16#A037: sDriveError := ' A037 DynPdo Mapping Warning: Object has to be mapped always.';
+	16#A039: sDriveError := ' A039 DynPdo Mapping Warning: Object has to be mapped because of modes of operation.';
+	16#A03B: sDriveError := ' A03B DynPdo BitMapping Warning: Object A is not next to Object B.';
+	16#A03D: sDriveError := ' A03D DynPdo BitMapping Warning: Can not Transform Bit-Mappings to Byte-Mappings.';
+	16#A03F: sDriveError := ' A03F DynPdo Mapping Warning: Invalid Oversampling Factor.';
+	16#A041: sDriveError := ' A041 DynPdo Mapping Warning: Oversampling is not allowed.';
+	16#A043: sDriveError := ' A043 DynPdo Assignment Warning';
+	16#A080: sDriveError := ' A080 Safe-Op is not possible because the local TwinCAT Runtime is in ConfigMode.';
+	16#A081: sDriveError := ' A081 Transition Pre-Op to Safe-Op not successful';
+	16#A082: sDriveError := ' A082 EtherCAT Slave Stack Error:';
+	16#FFFD: sDriveError := ' FFFD Debug firmware';
+	16#FFFF: sDriveError := ' FFFF Internal Error';
+	
+// Safe Motion
+	16#1: sDriveError := '1 Primary MC: GLOBAL_Fault with Code and Additional Code';
+	16#2: sDriveError := '2 Primary MC: GLOBAL_Shutdown with Code and Additional Code';
+	16#3: sDriveError := '3 Secondary MC: GLOBAL_Fault with Code and Additional Code';
+	16#4: sDriveError := '4 Secondary MC: GLOBAL_Shutdown with Code and Additional Code';
+	16#5: sDriveError := '5 Primary MC: Stored GLOBAL_Fault with Code and Additional Code';
+	16#6: sDriveError := '6 Secondary MC: Stored GLOBAL_Fault with Code and Additional Code';
+	16#7: sDriveError := '7 Diag-Message-Overflow: messages got lost';
+	16#8: sDriveError := '8 Primary MC: the CRC of the FRAM Data was wrong (Diag-Code)';
+	16#9: sDriveError := '9 Secondary MC: the CRC of the FRAM Data was wrong (Diag-Code)';
+	16#10: sDriveError := '10 Reserved CfgData has to be zero st offset';
+	16#11: sDriveError := '11 The password is wrong';
+	16#12: sDriveError := '12 The user was not found';
+	16#13: sDriveError := '13 The CRC of the login data does not match';
+	16#14: sDriveError := '14 The serial number of the login data does not match';
+	16#15: sDriveError := '15 The login watchdog has been expired';
+	16#16: sDriveError := '16 The user was logged out before';
+	16#17: sDriveError := '17 The user has not sufficient access rights';
+	16#18: sDriveError := '18 The reserved area of the CfgData was not 0';
+	16#19: sDriveError := '19 The CRC of the CfgData was wrong';
+	16#1A: sDriveError := '1A The user name is wrong at word offset when changing the password';
+	16#1B: sDriveError := '1B The requested number of users is too big';
+	16#1D: sDriveError := '1D The user update flags are wrong at word offset when changing the password';
+	16#1E: sDriveError := '1E The wrong user (user) is logged in when changing the password (user found in the received data)';
+	16#21: sDriveError := '21 the maximum Global-Shutdown counter was exceeded in the Vendor Data (maximum value: actual value:)';
+	16#80: sDriveError := '80 Safety reports FSoE Group error on channel A';
+	16#81: sDriveError := '81 Safety reports FSoE Group error on channel B';
+	16#82: sDriveError := '82 Safety reports STO module error on channel A';
+	16#83: sDriveError := '83 Safety reports STO module error on channel B';
+	16#84: sDriveError := '84 Safety reports FSIN module (digital Inputs) error on channel A';
+	16#85: sDriveError := '85 Safety reports FSIN module (digital Inputs) error on channel B';
+	16#86: sDriveError := '86 Safety reports Brake module error on channel A';
+	16#87: sDriveError := '87 Safety reports Brake module error on channel B';
+	16#88: sDriveError := '88 Safety reports Encoder overrange error on channel A';
+	16#89: sDriveError := '89 Safety reports Encoder overrange error on channel B';
+	16#90: sDriveError := '90 Safety reports Encoder underrange error on channel A';
+	16#91: sDriveError := '91 Safety reports Encoder underrange error on channel B';
+	16#92: sDriveError := '92 Safety reports Primary Safety Feedback error on channel A';
+	16#93: sDriveError := '93 Safety reports Primary Safety Feedback error on channel B';
+	16#94: sDriveError := '94 Safety reports Secondary Safety Feedback error on channel A';
+	16#95: sDriveError := '95 Safety reports Secondary Safety Feedback error on channel B';
+	16#B0: sDriveError := 'B0 Safety Card is in Bootloader mode. Download of valid Firmware is required.';
+	16#FF: sDriveError := 'FF Internal Error. Additional Errorcode';
+	16#101: sDriveError := '101 Primary MC: Completed RAM TEST: Starttime: and Stoptime: . The calculated timediff is .';
+	16#102: sDriveError := '102 Secondary MC: Completed RAM TEST: Starttime: and Stoptime: . The calculated timediff is .';
+	16#103: sDriveError := '103 C1 MCTEST Info: Arg1: ';
+	16#104: sDriveError := '104 C2 MCTEST Info: Arg1: ';
+	16#115: sDriveError := '115 Controller: Maximum temperature exceeded.';
+	16#116: sDriveError := '116 Controller: Minimum temperature alert.';
+	16#117: sDriveError := '117 Controller: Temperature difference too high.';
+	16#118: sDriveError := '118 Controller: Maximum voltage alert (Partner_VCC). Voltage is ';
+	16#119: sDriveError := '119 Controller: Minimum voltage alert (Partner_VCC). Voltage is ';
+	16#11A: sDriveError := '11A Controller: Maximum voltage alert (ECAT_VCC). Voltage is ';
+	16#11B: sDriveError := '11B Controller: Minimum voltage alert (ECAT_VCC). Voltage is ';
+	16#11E: sDriveError := '11E Controller: Timer Tick Difference is too high. Difference is ';
+	16#11F: sDriveError := '11F Controller: Minimum value alert (Individual ADC Check). Channel parameter =. Actual value is .';
+	16#120: sDriveError := '120 Controller: Maximum value alert (Individual ADC Check). Channel parameter =. Actual value is .';
+	16#121: sDriveError := '121 Module Shutdown due to minimum value alert (Individual ADC Check). Channel parameter =.';
+	16#1000: sDriveError := '1000 The size of the safe User Parameter is too small ()';
+	16#1003: sDriveError := '1003 The reserved data of the SafeOut User Parameter of module at byte offset has to be 0';
+	16#1004: sDriveError := '1004 The reserved data of the SafeIn User Parameter of module at byte offset has to be 0';
+	16#100A: sDriveError := '100A The version of the Product-Code is unequal the expected value of';
+	16#1010: sDriveError := '1010 The default Project CRC is wrong';
+	16#1030: sDriveError := '1030 The size of the safe User Parameter is too big ()';
+	16#1515: sDriveError := '1515 AX891x SafetyCard: wrong Firmware. Number of supported axis in SafetyCard does not fit with current device';
+	16#1516: sDriveError := '1516 AX891x SafetyCard: Invalid Current scaling shift value for calculation configured. AX891x VendorData: AX8yxx:';
+	16#2001: sDriveError := '2001 The. connection has received an invalid FSoE-Cmd in state CONNECTION';
+	16#2002: sDriveError := '2002 The. connection has received an unknown FSoE-Cmd in state CONNECTION';
+	16#2003: sDriveError := '2003 The. connection has received an invalid FSoE-ConnID in state CONNECTION';
+	16#2004: sDriveError := '2004 The. connection has received an invalid FSoE-CRC in state CONNECTION';
+	16#2005: sDriveError := '2005 The FSoE-Watchdog of the. connection has been expired in state CONNECTION';
+	16#2006: sDriveError := '2006 On the. connection the received FSoE-Address does not match with the expected FSoE-Address';
+	16#2007: sDriveError := '2007 On the. connection the received connection data do not match with the sent values';
+	16#200C: sDriveError := '200C On the. connection in state CONNECTION the Connection was restarted from the FSoE-Master';
+	16#200E: sDriveError := '200E A Module fault was detected on the. connection in state CONNECTION';
+	16#2011: sDriveError := '2011 On the. connection in state CONNECTION a FSoE-Reset with Error-Code 1 was received which means that the communication partner has received an invalid FSoE-Cmd';
+	16#2012: sDriveError := '2012 On the. connection in state CONNECTION a FSoE-Reset with Error-Code 2 was received which means that the communication partner has received an unknown FSoE-Cmd';
+	16#2013: sDriveError := '2013 On the. connection in state CONNECTION a FSoE-Reset with Error-Code 3 was received which means that the communication partner has received an invalid FSoE-ConnID';
+	16#2014: sDriveError := '2014 On the. connection in state CONNECTION a FSoE-Reset with Error-Code 4 was received which means that the communication partner has received an invalid FSoE-CRC';
+	16#2015: sDriveError := '2015 On the. connection in state CONNECTION a FSoE-Reset with Error-Code 5 was received which means that the FSoE-Watchdog has been expired in the communication partner';
+	16#2016: sDriveError := '2016 On the. connection in state CONNECTION a FSoE-Reset with Error-Code 6 was received which means that the communication partner has received an invalid FSoE-Address';
+	16#2017: sDriveError := '2017 On the. connection in state CONNECTION a FSoE-Reset with Error-Code 7 was received which means that the communication partner has received connection data do not match with the sent values';
+	16#2018: sDriveError := '2018 On the. connection in state CONNECTION a FSoE-Reset with Error-Code 8 was received which means that the communication partner has received an invalid communication parameter length';
+	16#2019: sDriveError := '2019 On the. connection in state CONNECTION a FSoE-Reset with Error-Code 9 was received which means that the communication partner has received an invalid FSoE Watchdog';
+	16#201A: sDriveError := '201A On the. connection in state CONNECTION a FSoE-Reset with Error-Code 10 was received which means that the communication partner has received an invalid application parameter length';
+	16#201B: sDriveError := '201B On the. connection in state CONNECTION a FSoE-Reset with Error-Code 11 was received which means that the communication partner has received invalid application parameter data';
+	16#201C: sDriveError := '201C On the. connection in state CONNECTION a FSoE-Reset with Error-Code 12 was received';
+	16#201D: sDriveError := '201D On the. connection in state CONNECTION a FSoE-Reset with Error-Code 13 was received';
+	16#201E: sDriveError := '201E On the. connection in state CONNECTION a FSoE-Reset with Error-Code 14 was received which means that the communication partner has detected a module fault';
+	16#201F: sDriveError := '201F On the. connection in state CONNECTION a FSoE-Reset with Error-Code was received';
+	16#2041: sDriveError := '2041 The. connection has received an invalid FSoE-Cmd in state PARAMETER';
+	16#2042: sDriveError := '2042 The. connection has received an unknown FSoE-Cmd in state PARAMETER';
+	16#2043: sDriveError := '2043 The. connection has received an invalid FSoE-ConnID in state PARAMETER';
+	16#2044: sDriveError := '2044 The. connection has received an invalid FSoE-CRC in state PARAMETER';
+	16#2045: sDriveError := '2045 The FSoE-Watchdog of the. connection has been expired in state PARAMETER';
+	16#2047: sDriveError := '2047 On the. connection the received parameter data do not match with the sent values';
+	16#2048: sDriveError := '2048 On the. connection the received communication parameter length () does not match with the expected value of 2';
+	16#2049: sDriveError := '2049 On the. connection the received FSoE Watchdog () is outside the allowed area from 2 to 60000';
+	16#204A: sDriveError := '204A On the. connection the received application parameter length () is unequal the expected length of';
+	16#204B: sDriveError := '204B On the. connection the received application parameter data are wrong';
+	16#204C: sDriveError := '204C On the. connection in state PARAMETER the Connection was restarted from the FSoE-Master';
+	16#204E: sDriveError := '204E A Module fault was detected on the. connection in state PARAMETER';
+	16#2051: sDriveError := '2051 On the. connection in state PARAMETER a FSoE-Reset with Error-Code 1 was received which means that the communication partner has received an invalid FSoE-Cmd';
+	16#2052: sDriveError := '2052 On the. connection in state PARAMETER a FSoE-Reset with Error-Code 2 was received which means that the communication partner has received an unknown FSoE-Cmd';
+	16#2053: sDriveError := '2053 On the. connection in state PARAMETER a FSoE-Reset with Error-Code 3 was received which means that the communication partner has received an invalid FSoE-ConnID';
+	16#2054: sDriveError := '2054 On the. connection in state PARAMETER a FSoE-Reset with Error-Code 4 was received which means that the communication partner has received an invalid FSoE-CRC';
+	16#2055: sDriveError := '2055 On the. connection in state PARAMETER a FSoE-Reset with Error-Code 5 was received which means that the FSoE-Watchdog has been expired in the communication partner';
+	16#2056: sDriveError := '2056 On the. connection in state PARAMETER a FSoE-Reset with Error-Code 6 was received which means that the communication partner has received an invalid FSoE-Address';
+	16#2057: sDriveError := '2057 On the. connection in state PARAMETER a FSoE-Reset with Error-Code 7 was received which means that the communication partner has received connection data do not match with the sent values';
+	16#2058: sDriveError := '2058 On the. connection in state PARAMETER a FSoE-Reset with Error-Code 8 was received which means that the communication partner has received an invalid communication parameter length';
+	16#2059: sDriveError := '2059 On the. connection in state PARAMETER a FSoE-Reset with Error-Code 9 was received which means that the communication partner has received an invalid FSoE Watchdog';
+	16#205A: sDriveError := '205A On the. connection in state PARAMETER a FSoE-Reset with Error-Code 10 was received which means that the communication partner has received an invalid application parameter length';
+	16#205B: sDriveError := '205B On the. connection in state PARAMETER a FSoE-Reset with Error-Code 11 was received which means that the communication partner has received invalid application parameter data';
+	16#205C: sDriveError := '205C On the. connection in state PARAMETER a FSoE-Reset with Error-Code 12 was received';
+	16#205D: sDriveError := '205D On the. connection in state PARAMETER a FSoE-Reset with Error-Code 13 was received';
+	16#205E: sDriveError := '205E On the. connection in state PARAMETER a FSoE-Reset with Error-Code 14 was received which means that the communication partner has detected a module fault';
+	16#205F: sDriveError := '205F On the. connection in state PARAMETER a FSoE-Reset with Error-Code was received';
+	16#2061: sDriveError := '2061 On the. connection in state PARAMETER a wrong Command was received';
+	16#2081: sDriveError := '2081 The. connection has received an invalid FSoE-Cmd in state DATA';
+	16#2082: sDriveError := '2082 The. connection has received an unknown FSoE-Cmd in state DATA';
+	16#2083: sDriveError := '2083 The. connection has received an invalid FSoE-ConnID in state DATA';
+	16#2084: sDriveError := '2084 The. connection has received an invalid FSoE-CRC in state DATA';
+	16#2085: sDriveError := '2085 The FSoE-Watchdog of the. connection has been expired in state DATA';
+	16#208C: sDriveError := '208C On the. connection in state DATA the Connection was restarted from the FSoE-Master';
+	16#208D: sDriveError := '208D The FailSafeData command was received on the. connection in state DATA';
+	16#208E: sDriveError := '208E A Module fault was detected on the. connection in state DATA';
+	16#2091: sDriveError := '2091 On the. connection in state DATA a FSoE-Reset with Error-Code 1 was received which means that the communication partner has received an invalid FSoE-Cmd';
+	16#2092: sDriveError := '2092 On the. connection in state DATA a FSoE-Reset with Error-Code 2 was received which means that the communication partner has received an unknown FSoE-Cmd';
+	16#2093: sDriveError := '2093 On the. connection in state DATA a FSoE-Reset with Error-Code 3 was received which means that the communication partner has received an invalid FSoE-ConnID';
+	16#2094: sDriveError := '2094 On the. connection in state DATA a FSoE-Reset with Error-Code 4 was received which means that the communication partner has received an invalid FSoE-CRC';
+	16#2095: sDriveError := '2095 On the. connection in state DATA a FSoE-Reset with Error-Code 5 was received which means that the FSoE-Watchdog has been expired in the communication partner';
+	16#2096: sDriveError := '2096 On the. connection in state DATA a FSoE-Reset with Error-Code 6 was received which means that the communication partner has received an invalid FSoE-Address';
+	16#2097: sDriveError := '2097 On the. connection in state DATA a FSoE-Reset with Error-Code 7 was received which means that the communication partner has received connection data do not match with the sent values';
+	16#2098: sDriveError := '2098 On the. connection in state DATA a FSoE-Reset with Error-Code 8 was received which means that the communication partner has received an invalid communication parameter length';
+	16#2099: sDriveError := '2099 On the. connection in state DATA a FSoE-Reset with Error-Code 9 was received which means that the communication partner has received an invalid FSoE Watchdog';
+	16#209A: sDriveError := '209A On the. connection in state DATA a FSoE-Reset with Error-Code 10 was received which means that the communication partner has received an invalid application parameter length';
+	16#209B: sDriveError := '209B On the. connection in state DATA a FSoE-Reset with Error-Code 11 was received which means that the communication partner has received invalid application parameter data';
+	16#209C: sDriveError := '209C On the. connection in state DATA a FSoE-Reset with Error-Code 12 was received';
+	16#209D: sDriveError := '209D On the. connection in state DATA a FSoE-Reset with Error-Code 13 was received';
+	16#209E: sDriveError := '209E On the. connection in state DATA a FSoE-Reset with Error-Code 14 was received which means that the communication partner has detected a module fault';
+	16#209F: sDriveError := '209F On the. connection in state DATA a FSoE-Reset with Error-Code was received';
+	16#20C1: sDriveError := '20C1 The. connection has received an invalid FSoE-Cmd in state SHUTDOWN';
+	16#20C2: sDriveError := '20C2 The. connection has received an unknown FSoE-Cmd in state SHUTDOWN';
+	16#20C4: sDriveError := '20C4 The. connection has received an invalid FSoE-CRC in state SHUTDOWN';
+	16#20E3: sDriveError := '20E3 The. connection has received the invalid FSoE-ConnID 0 in state SESSION';
+	16#3100: sDriveError := '3100 No groups defined when trying to activate or deactivate groups';
+	16#3101: sDriveError := '3101 The reserved bits are set in value at offset when trying to activate or deactivate groups';
+	16#3102: sDriveError := '3102 The operation mode at offset is not supported when trying to activate or deactivate groups';
+	16#3103: sDriveError := '3103 The deactivation of groups is not enabled for any group so no replacement values should be downloaded';
+	16#3104: sDriveError := '3104 The maximum number () of Cfg Data pages was exceeded in the Replacement Values Cfg Data';
+	16#3105: sDriveError := '3105 Invalid FB output size size at offset of the Replacement Values Cfg Data';
+	16#3106: sDriveError := '3106 Unexpected groupindex in the Replacement values Cfg Data at offset';
+	16#3107: sDriveError := '3107 The download of the Activate Project Cfg Data was refused because bytes of the Replacement Values Cfg Data were missing';
+	16#3108: sDriveError := '3108 To activate the Group the user has to logged in with access rights Bit 0-15 unequal 0 that the Safe Logic Program will be stopped when logging in';
+	16#3109: sDriveError := '3109 No more definitions of individual replace values for analog FB Outputs in case of Group State unequal RUN are expected at offset';
+	16#310A: sDriveError := '310A The offset in the definitions of individual replace values for analog FB Outputs in case of Group State unequal RUN was wrong at offset';
+	16#310B: sDriveError := '310B The source process image offset of the Cyclic FRAM Data is outside the FB analog input area at offset';
+	16#310C: sDriveError := '310C The source process image offset of the Cyclic FRAM Data has to even at offset';
+	16#310D: sDriveError := '310D The size of the Cyclic FRAM Data was exceeding at offset';
+	16#310E: sDriveError := '310E The received size of the Cyclic FRAM Data at word offset 24 of the Safe Logic Cfg Data () is unequal the calculated value of';
+	16#310F: sDriveError := '310F The size of the Cyclic FRAM CfgData in the GroupCfgData was not dividable by 4 at offset';
+	16#3110: sDriveError := '3110 The offset of the Cyclic FRAM Data in the GroupCfgData was wrong at offset';
+	16#3111: sDriveError := '3111 The value of at offset is not allowed when trying to activate or deactivate groups';
+	16#3113: sDriveError := '3113 FB CAMMON (Word-Offset of the CfgData): The TDC2UpperLimit () is lower or equal than the maximum position jitter ()';
+	16#3114: sDriveError := '3114 FB CAMMON (Word-Offset of the CfgData): The TDCUpperLimit () is lower or equal than the maximum position jitter ()';
+	16#3115: sDriveError := '3115 FB CAMMON (Word-Offset of the CfgData): The value of TDCLowerLimit (plus maximum position jitter) () is bigger or equal the configured position of 360∩┐╜ ()';
+	16#3116: sDriveError := '3116 FB CAMMON (Word-Offset of the CfgData): The value of BDCUpperLimit (plus twice the maximum position jitter) () is bigger or equal the value of TDCLowerLimit ()';
+	16#3117: sDriveError := '3117 FB CAMMON (Word-Offset of the CfgData): The value of BDCUpperLimit () is smaller or equal the configured value of 180∩┐╜ (plus maximum position jitter) ()';
+	16#3118: sDriveError := '3118 FB CAMMON (Word-Offset of the CfgData): The value of BDCLowerLimit (plus maximum position jitter) () is greater or equal the configured value of 180∩┐╜ ()';
+	16#3119: sDriveError := '3119 FB CAMMON (Word-Offset of the CfgData): The value of OverrunMax (plus twice the maximum position jitter) () is bigger or equal the value of BDCLowerLimit ()';
+	16#311A: sDriveError := '311A FB CAMMON (Word-Offset of the CfgData): The value of TDCUpperLimit (plus twice the maximum position jitter) () is bigger or equal the value of OverrunMax ()';
+	16#311B: sDriveError := '311B FB CAMMON (Word-Offset of the CfgData): The value of TDC1UpperLimit (plus the maximum position jitter) () is bigger or equal the configured position of 360∩┐╜ ()';
+	16#311C: sDriveError := '311C FB CAMMON (Word-Offset of the CfgData): The value of TDC1LowerLimit (plus twice the maximum position jitter) () is bigger or equal the value of TDC1UpperLimit (5d)';
+	16#311D: sDriveError := '311D FB CAMMON (Word-Offset of the CfgData): The value of TDC2LowerLimit (plus twice the maximum position jitter) () is bigger or equal the value of BDCLowerLimit ()';
+	16#311E: sDriveError := '311E FB CAMMON (Word-Offset of the CfgData): The value of TDC2UpperLimit (plus twice the maximum position jitter) () is bigger or equal the value of TDC2LowerLimit ()';
+	16#311F: sDriveError := '311F The maximum size of the Replacement Values was exceeded at Word-Offset of the Group Cfg Data';
+	16#3120: sDriveError := '3120 If no deactivation mode is enabled the offset of the replacement values shall be zero at Word-Offset of the Group Cfg Data';
+	16#3121: sDriveError := '3121 No more replacement values expected at byte-offset of the Replacement Values Cfg Data';
+	16#3200: sDriveError := '3200 The PROFIsafe-protocol is not supported on this device';
+	16#3201: sDriveError := '3201 The F_ParVersion in the F_Prm_Flag2 of the F-Parameter at Word-Offset is unequal 1 (PROFIsafe V2)';
+	16#3202: sDriveError := '3202 The F_CRC1 of the F-Parameter at Word-Offset is wrong';
+	16#3203: sDriveError := '3203 The F_CRC_Length in the F_Prm_Flag1 of the F-Parameter is wrong at Word-Offset ';
+	16#3206: sDriveError := '3206 The I-Parameter CRC in the F-Parameter is wrong at Word-Offset';
+	16#3207: sDriveError := '3207 The F_Block_ID in the F_Prm_Flag2 of the F-Parameter is wrong at Word-Offset ';
+	16#3208: sDriveError := '3208 The F_Source_Address in the F-Parameter at Word-Offset is outside the allowed area of 1-0xFFFE';
+	16#3209: sDriveError := '3209 The F_Destination_Address in the F-Parameter at Word-Offset is outside the allowed area of 1-0xFFFE';
+	16#320A: sDriveError := '320A The F_WD_Time in the F-parameter at Word-Offset is outside the allowed range from 2-60000';
+	16#320B: sDriveError := '320B The F_Destination_Address in the F-Parameter at Word-Offset is wrong';
+	16#3300: sDriveError := '3300 The State OPERATIONAL was left in Restore Mode';
+	16#3301: sDriveError := '3301 Only CRCs were matching in Restore Mode';
+	16#3302: sDriveError := '3302 The CRC of the Activate Project Cfg Data in Restore Mode does not match';
+	16#3303: sDriveError := '3303 No RestoreMode Slaves configured when trying to start the Restore Mode';
+	16#3304: sDriveError := '3304 The CRC of the User List Cfg Data was not matching in Restore Mode';
+	16#3305: sDriveError := '3305 The download of the User List Cfg Data is not activated in Restore Mode';
+	16#3306: sDriveError := '3306 The download of the User List Cfg Data in Restore-Mode is not allowed in the state';
+	16#3307: sDriveError := '3307 The activation of the TwinSAFE Restore Project is not allowed in the state';
+	16#3308: sDriveError := '3308 The Restore Mode is not supported in EtherCAT state';
+	16#3310: sDriveError := '3310 The FSoE-Slave on the. connection is in Restore-Mode';
+	16#3311: sDriveError := '3311 The FSoE-Master on the. connection is in Restore-Mode';
+	16#3400: sDriveError := '3400 The. group has no more errors';
+	16#3401: sDriveError := '3401 The Analog Input at word offset of the analog input process image has expired maximum allowed deviation to the last stored value';
+	16#3402: sDriveError := '3402 The Wait-Com-Error-Timeout has not been expired when the group should be deactivated in passivate mode';
+	16#3403: sDriveError := '3403 A module fault happened in group';
+	16#3404: sDriveError := '3404 The assigned connection reported an error when the group was deactivated in passivate mode';
+	16#3405: sDriveError := '3405 The connection has been successfully restarted when the group was deactivated in passivate mode';
+	16#3410: sDriveError := '3410 All groups will enter the ERROR-state because the safe logic program has been restarted';
+	16#3411: sDriveError := '3411 All groups will enter the ERROR-state because the CRC of the Change Group Activation Data was wrong';
+	16#3412: sDriveError := '3412 All groups will enter the ERROR-state because the CRC of the Change FB Parameter Data was wrong';
+	16#3413: sDriveError := '3413 All groups will enter the ERROR-state because the CRC of the Project CRC Data was wrong';
+	16#3414: sDriveError := '3414 All groups will enter the ERROR-state because the CRC of the Power-On Analog Value Check Data was wrong';
+	16#3415: sDriveError := '3415 The TwinSAFE Logic Program was not loaded on C1 because of an inconsistency';
+	16#3416: sDriveError := '3416 The TwinSAFE Logic Program was not loaded on C2 because of an inconsistency';
+	16#3420: sDriveError := '3420 No more EtherCAT size error (EtherCAT Output Size';
+	16#3421: sDriveError := '3421 The EtherCAT Output Data sizes of the Safety Logic Program () and the EtherCAT Configuration () are unequal';
+	16#3422: sDriveError := '3422 The EtherCAT Input Data sizes of the Safety Logic Program () and the EtherCAT Configuration () are unequal';
+	16#3423: sDriveError := '3423 The EtherCAT Output Data sizes for PROFIsafe of the Safety Logic Program () and the EtherCAT Configuration () are unequal';
+	16#3424: sDriveError := '3424 The EtherCAT Input Data sizes for PROFIsafe of the Safety Logic Program () and the EtherCAT Configuration () are unequal';
+	16#3425: sDriveError := '3425 The needed EtherCAT Process data buffer size () exceeded the maximum available size of';
+	16#3501: sDriveError := '3501 On the. connection the changeable FSoE Address of already exists';
+	16#3502: sDriveError := '3502 On the. connection the changeable FSoE Address is zero';
+	16#3800: sDriveError := '3800 FB (ESTOP): An EDM-fault was detected in state SAFE';
+	16#3802: sDriveError := '3802 FB (ESTOP): An EDM-fault was detected in state RESET';
+	16#3803: sDriveError := '3803 FB (ESTOP): An EDM-fault was detected in state START';
+	16#3804: sDriveError := '3804 FB (ESTOP): An DiscTime-Fault was detected in state SAFE';
+	16#3806: sDriveError := '3806 FB (ESTOP): An DiscTime-Fault was detected in state RESET';
+	16#3807: sDriveError := '3807 FB (ESTOP): An DiscTime-Fault was detected in state START';
+	16#3809: sDriveError := '3809 FB (ESTOP): An DiscTime-Fault was detected in state DELAYOUT';
+	16#380F: sDriveError := '380F FB (ESTOP): At least one activated EDM-Input was not reset in RUN when the EDM Reset time had been expired (Diag-Code=)';
+	16#3810: sDriveError := '3810 FB (MON): An EDM-fault was detected in state SAFE';
+	16#3812: sDriveError := '3812 FB (MON): An EDM-fault was detected in state RESET';
+	16#3813: sDriveError := '3813 FB (MON): An EDM-fault was detected in state START';
+	16#3814: sDriveError := '3814 FB (MON): An DiscTime-Fault was detected in state SAFE';
+	16#3816: sDriveError := '3816 FB (MON): An DiscTime-Fault was detected in state RESET';
+	16#3817: sDriveError := '3817 FB (MON): An DiscTime-Fault was detected in state START';
+	16#3818: sDriveError := '3818 FB (MON): An DiscTime-Fault was detected in state RUN';
+	16#3819: sDriveError := '3819 FB (MON): An DiscTime-Fault was detected in state DELAYOUT';
+	16#381A: sDriveError := '381A FB (MON): An DiscTime-Fault was detected in state FUNCTEST';
+	16#381F: sDriveError := '381F FB (MON): At least one activated EDM-Input was not reset in RUN when the EDM Reset time had been expired (Diag-Code=)';
+	16#3820: sDriveError := '3820 FB (TWOHAND): A Disc-Group-fault was detected in state 1BUTTON';
+	16#3821: sDriveError := '3821 FB (TWOHAND): A Disc-Group-fault was detected in state 2BUTTON';
+	16#3823: sDriveError := '3823 FB (TWOHAND): An DiscTime-Fault was detected in state SAFE';
+	16#3825: sDriveError := '3825 FB (TWOHAND): An DiscTime-Fault was detected in state RESET';
+	16#382B: sDriveError := '382B FB (TWOHAND): An DiscTime-Fault was detected in state 1BUTTON';
+	16#382C: sDriveError := '382C FB (TWOHAND): An DiscTime-Fault was detected in state 2BUTTON';
+	16#382D: sDriveError := '382D FB (TWOHAND): An DiscTime-Fault was detected in state RELEASE';
+	16#3830: sDriveError := '3830 FB (OPMODE): An DiscTime-Fault was detected';
+	16#3831: sDriveError := '3831 FB (OPMODE): An Input-Fault was detected in state RESET';
+	16#3840: sDriveError := '3840 FB (EDM): The SwitchOn-Time had been expired';
+	16#3841: sDriveError := '3841 FB (EDM): The SwitchOff-Time had been expired';
+	16#3853: sDriveError := '3853 FB (CS): An DiscTime-Fault was detected in state SAFE';
+	16#3855: sDriveError := '3855 FB (CS): An DiscTime-Fault was detected in state RESET';
+	16#3881: sDriveError := '3881 FB (MUTING): An DiscTime-Fault was detected in state RUN';
+	16#3883: sDriveError := '3883 FB (MUTING): An DiscTime-Fault was detected in state SAFE';
+	16#3885: sDriveError := '3885 FB (MUTING): An DiscTime-Fault was detected in state RESET';
+	16#3888: sDriveError := '3888 FB (MUTING): An DiscTime-Fault was detected in state DELAYOUT';
+	16#3889: sDriveError := '3889 FB (MUTING): An DiscTime-Fault was detected in state MUTING1';
+	16#388A: sDriveError := '388A FB (MUTING): An DiscTime-Fault was detected in state MUTING2';
+	16#388B: sDriveError := '388B FB (MUTING): An DiscTime-Fault was detected in state MUTING3';
+	16#388C: sDriveError := '388C FB (MUTING): An DiscTime-Fault was detected in state MUTING4';
+	16#388D: sDriveError := '388D FB (MUTING): An DiscTime-Fault was detected in state MUTING5';
+	16#388E: sDriveError := '388E FB (MUTING): An DiscTime-Fault was detected in state MUTING6';
+	16#388F: sDriveError := '388F FB (MUTING): An DiscTime-Fault was detected in state MUTING7';
+	16#3890: sDriveError := '3890 FB (MUTING): An DiscTime-Fault was detected in state MUTING8';
+	16#3891: sDriveError := '3891 FB (MUTING): An DiscTime-Fault was detected in state MUTING9';
+	16#3892: sDriveError := '3892 FB (MUTING): State RUN';
+	16#3893: sDriveError := '3893 FB (MUTING): State RUN';
+	16#3894: sDriveError := '3894 FB (MUTING): State MUTING1';
+	16#3895: sDriveError := '3895 FB (MUTING): State MUTING1';
+	16#3896: sDriveError := '3896 FB (MUTING): State MUTING2';
+	16#3897: sDriveError := '3897 FB (MUTING): State MUTING2';
+	16#3898: sDriveError := '3898 FB (MUTING): State MUTING3';
+	16#3899: sDriveError := '3899 FB (MUTING): State MUTING3';
+	16#389A: sDriveError := '389A FB (MUTING): State MUTING3';
+	16#389B: sDriveError := '389B FB (MUTING): State MUTING4';
+	16#389C: sDriveError := '389C FB (MUTING): State MUTING4';
+	16#389D: sDriveError := '389D FB (MUTING): State MUTING5';
+	16#389E: sDriveError := '389E FB (MUTING): State MUTING5';
+	16#389F: sDriveError := '389F FB (MUTING): State MUTING5';
+	16#38A0: sDriveError := '38A0 FB (MUTING): State MUTING6';
+	16#38A1: sDriveError := '38A1 FB (MUTING): State MUTING6';
+	16#38A2: sDriveError := '38A2 FB (MUTING): State MUTING7';
+	16#38A3: sDriveError := '38A3 FB (MUTING): State MUTING7';
+	16#38A4: sDriveError := '38A4 FB (MUTING): State MUTING8';
+	16#38A5: sDriveError := '38A5 FB (MUTING): State MUTING8';
+	16#38A6: sDriveError := '38A6 FB (MUTING): State MUTING8';
+	16#38A7: sDriveError := '38A7 FB (MUTING): State MUTING8';
+	16#38A8: sDriveError := '38A8 FB (MUTING): State MUTING9';
+	16#38A9: sDriveError := '38A9 FB (MUTING): State MUTING9';
+	16#38AA: sDriveError := '38AA FB (MUTING): State MUTING5';
+	16#38AB: sDriveError := '38AB FB (MUTING): State MUTING6';
+	16#38AC: sDriveError := '38AC FB (MUTING): State MUTING1';
+	16#38B0: sDriveError := '38B0 FB (MUTING): At least one activated EDM-Input was not reset in RUN when the EDM Reset time had been expired (Diag-Code=)';
+	16#38C1: sDriveError := '38C1 FB (MUTING): The Max-Muting-Time had been expired in state MUTING1 (Digital Inputs=)';
+	16#38C2: sDriveError := '38C2 FB (MUTING): The Max-Muting-Time had been expired in state MUTING2 (Digital Inputs=)';
+	16#38C3: sDriveError := '38C3 FB (MUTING): The Max-Muting-Time had been expired in state MUTING3 (Digital Inputs=)';
+	16#38C4: sDriveError := '38C4 FB (MUTING): The Max-Muting-Time had been expired in state MUTING4 (Digital Inputs=)';
+	16#38C5: sDriveError := '38C5 FB (MUTING): The Max-Muting-Time had been expired in state MUTING5 (Digital Inputs=)';
+	16#38C6: sDriveError := '38C6 FB (MUTING): The Max-Muting-Time had been expired in state MUTING6 (Digital Inputs=)';
+	16#38C7: sDriveError := '38C7 FB (MUTING): The Max-Muting-Time had been expired in state MUTING7 (Digital Inputs=)';
+	16#38C8: sDriveError := '38C8 FB (MUTING): The Max-Muting-Time had been expired in state MUTING8 (Digital Inputs=)';
+	16#38C9: sDriveError := '38C9 FB (MUTING): The Max-Muting-Time had been expired in state MUTING9 (Digital Inputs=)';
+	16#4001: sDriveError := '4001 FB (CAMMON): The TDC2UpperLimit () is lower or equal than the maximum position jitter ()';
+	16#4002: sDriveError := '4002 FB (CAMMON): The Position () is bigger than the maximum position (plus the maximum position jitter) ()';
+	16#4003: sDriveError := '4003 FB (CAMMON): The input OverrunCAM was FALSE in the top dead center area';
+	16#4004: sDriveError := '4004 FB (CAMMON): The input OverrunCAM changed from FALSE to TRUE outside the area between BDCUpperLimit and TDCLowerLimit';
+	16#4005: sDriveError := '4005 FB (CAMMON): The input OverrunCAM was TRUE in the area between OverrunMax and BDCUpperLimit';
+	16#4006: sDriveError := '4006 FB (CAMMON): The input OverrunCAM changed from TRUE to FALSE outside the area between OverrunMax and BDCLowerLimit';
+	16#4007: sDriveError := '4007 FB (CAMMON): The input UpwardsCAM was FALSE in the area between BDCUpperLimit and TDCLowerLimit';
+	16#4008: sDriveError := '4008 FB (CAMMON): The input UpwardsCAM changed from FALSE to TRUE outside the area between BDCLowerLimit and TDCLowerLimit';
+	16#4009: sDriveError := '4009 FB (CAMMON): The input UpwardsCAM changed from TRUE to FALSE outside the area between TDCLowerLimit and OverrunMax';
+	16#400A: sDriveError := '400A FB (CAMMON): The Position was moving while waiting for a rising edge of the input Reset in the state MOVE-STOP';
+	16#400B: sDriveError := '400B FB (CAMMON): The Position was moving while waiting for a falling edge of the input Reset in the state MOVE-START';
+	16#400C: sDriveError := '400C FB (CAMMON): The Position in the area between OverrunMax and BDCLowerLimit was detected in the state MOVE-UP';
+	16#400D: sDriveError := '400D FB (CAMMON): The Position has left the top dead center while waiting for a stop';
+	16#400E: sDriveError := '400E FB (CAMMON): The Position has been changed negative';
+	16#400F: sDriveError := '400F FB (CAMMON): The input UpwardsCAM was TRUE in the area between OverrunMax and BDCLowerLimit';
+	16#4010: sDriveError := '4010 FB (CAMMON): The Position has a circle overflow in Pendulum Mode';
+	16#4011: sDriveError := '4011 FB (CAMMON): The Position has moved while waiting for a rising edge of the input Reset in Pendulum Mode';
+	16#4012: sDriveError := '4012 FB (CAMMON): The Input BackwardsMove is TRUE while the Position is between 180∩┐╜ and 360∩┐╜';
+	16#4013: sDriveError := '4013 FB (CAMMON): The Input BackwardsMove is TRUE while the moving is clockwise';
+	16#4014: sDriveError := '4014 FB (CAMMON): The Position has moved while waiting for a falling edge of the input Reset in Pendulum Mode';
+	16#4015: sDriveError := '4015 FB (CAMMON): The value of TDCLowerLimit (plus maximum position jitter) () is bigger or equal the configured position of 360∩┐╜ ()';
+	16#4016: sDriveError := '4016 FB (CAMMON): The value of BDCUpperLimit (plus twice the maximum position jitter) () is bigger or equal the value of TDCLowerLimit ()';
+	16#4017: sDriveError := '4017 FB (CAMMON): The value of BDCUpperLimit () is smaller or equal the configured value of 180∩┐╜ (plus maximum position jitter) ()';
+	16#4018: sDriveError := '4018 FB (CAMMON): The value of BDCLowerLimit (plus maximum position jitter) () is greater or equal the configured value of 180∩┐╜ ()';
+	16#4019: sDriveError := '4019 FB (CAMMON): The value of OverrunMax (plus twice the maximum position jitter) () is bigger or equal the value of BDCLowerLimit ()';
+	16#401A: sDriveError := '401A FB (CAMMON): The value of TDCUpperLimit (plus twice the maximum position jitter) () is bigger or equal the value of OverrunMax ()';
+	16#401B: sDriveError := '401B FB (CAMMON): The value of TDC1UpperLimit (plus the maximum position jitter) () is bigger or equal the configured position of 360∩┐╜ ()';
+	16#401C: sDriveError := '401C FB (CAMMON): The value of TDC1LowerLimit (plus twice the maximum position jitter) () is bigger or equal the value of TDC1UpperLimit (5d)';
+	16#401D: sDriveError := '401D FB (CAMMON): The value of TDC2LowerLimit (plus twice the maximum position jitter) () is bigger or equal the value of BDCLowerLimit ()';
+	16#401E: sDriveError := '401E FB (CAMMON): The value of TDC2UpperLimit (plus twice the maximum position jitter) () is bigger or equal the value of TDC2LowerLimit ()';
+	16#401F: sDriveError := '401F FB (CAMMON): The input PressStarted is TRUE and the position did not move after the PressStartedDelayTime';
+	16#4020: sDriveError := '4020 FB (CAMMON): The input PressStarted is TRUE and the position has stopped after moving before';
+	16#4021: sDriveError := '4021 FB (CAMMON): The input PressStarted is TRUE and the position has not moved enough';
+	16#4022: sDriveError := '4022 FB (CAMMON)';
+	16#4023: sDriveError := '4023 FB (CAMMON)';
+	16#4024: sDriveError := '4024 FB (CAMMON): The Position was moving while waiting for a falling edge of the input Reset in the state WAIT-FOR_RESET';
+	16#4025: sDriveError := '4025 FB (CAMMON): The TDCUpperLimit () is lower or equal than the maximum position jitter ()';
+	16#4080: sDriveError := '4080 FB (ADD/SUB): an underflow was detected';
+	16#4081: sDriveError := '4081 FB (ADD/SUB): an overflow was detected';
+	16#4088: sDriveError := '4088 FB (SPEED): an underflow was detected';
+	16#4089: sDriveError := '4089 FB (SPEED): an overflow was detected';
+	16#4090: sDriveError := '4090 FB (LIMIT): the minimum value () is bigger than the maximum value ()';
+	16#4098: sDriveError := '4098 FB (COMPARE): an underflow was detected on CompOut ()';
+	16#4099: sDriveError := '4099 FB (COMPARE): an overflow was detected on CompOut ()';
+	16#40A0: sDriveError := '40A0 FB (MUL): an underflow was detected';
+	16#40A1: sDriveError := '40A1 FB (MUL): an overflow was detected';
+	16#40A8: sDriveError := '40A8 FB (DIV): an underflow was detected';
+	16#40A9: sDriveError := '40A9 FB (DIV): an overflow was detected';
+	16#40B0: sDriveError := '40B0 FB (SCALE): an underflow was detected';
+	16#40B1: sDriveError := '40B1 FB (SCALE): an overflow was detected';
+	16#40B2: sDriveError := '40B2 FB (SCALE): an overflow was detected after multiplication';
+	16#40B3: sDriveError := '40B3 FB (SCALE): an overflow was detected before division when rounding up the value';
+	16#40B8: sDriveError := '40B8 FB (COUNT): an underflow was detected on ActValue ()';
+	16#40B9: sDriveError := '40B9 FB (COUNT): an overflow was detected on ActValue ()';
+	16#40C0: sDriveError := '40C0 FB (SLI): an underflow was detected on ActValue ()';
+	16#40C1: sDriveError := '40C1 FB (SLI): an overflow was detected on ActValue ()';
+	16#40C8: sDriveError := '40C8 FB (ENVELOPE): an underflow was detected on InValue ()';
+	16#40C9: sDriveError := '40C9 FB (ENVELOPE): an overflow was detected on InValue ()';
+	16#40CA: sDriveError := '40CA FB (ENVELOPE): an overflow error was detected on InValue ()';
+	16#40CB: sDriveError := '40CB FB (ENVELOPE): the MaxTime was expired (InValue)';
+	16#6009: sDriveError := '6009 SAFEOUT:Initial-Parameter: MultiplierDiagTestPulse has to be greater zero. ModuleNr:';
+	16#6010: sDriveError := '6010 SAFEOUT:Initial-Parameter: Number of Modules incorrect. ModuleNr:';
+	16#6011: sDriveError := '6011 SAFEOUT:Initial-Parameter: Number of Channels incorrect. Parameter0:';
+	16#6012: sDriveError := '6012 SAFEOUT:Initial-Parameter: Number of Diagnosis active Module incorrect. Parameter0:';
+	16#6013: sDriveError := '6013 SAFEOUT:Initial-Parameter: Number of Diagnosis inactive Module incorrect. Parameter0:';
+	16#6014: sDriveError := '6014 SAFEOUT:Initial-Parameter: Number of Feedback active Module incorrect. Parameter0:';
+	16#6015: sDriveError := '6015 SAFEOUT:Initial-Parameter: Number of Feedback Diagnosis active Module incorrect. Parameter0:';
+	16#6016: sDriveError := '6016 SAFEOUT:Initial-Parameter: Number of Feedback inactive Module incorrect. Parameter0:';
+	16#6017: sDriveError := '6017 SAFEOUT:Initial-Parameter: Number of Feedback Diagnosis inactive Module incorrect. Parameter0:';
+	16#6018: sDriveError := '6018 SAFEOUT:Initial-Parameter: Number of Diagnosis active Channel incorrect. Parameter0:';
+	16#6019: sDriveError := '6019 SAFEOUT:Initial-Parameter: Number of Diagnosis inactive Channel incorrect. Parameter0:';
+	16#601A: sDriveError := '601A SAFEOUT:Initial-Parameter: Number of Feedback active Channel incorrect. Parameter0:';
+	16#601B: sDriveError := '601B SAFEOUT:Initial-Parameter: Number of Feedback Diagnosis active Channel incorrect. Parameter0:';
+	16#601C: sDriveError := '601C SAFEOUT:Initial-Parameter: Number of Feedback inactive Channel incorrect. Parameter0:';
+	16#601D: sDriveError := '601D SAFEOUT:Initial-Parameter: Number of Feedback Diagnosis inactive Channel incorrect. Parameter0:';
+	16#601E: sDriveError := '601E SAFEOUT:Setup Hardware Fault: Module Switch. ReturnData:';
+	16#601F: sDriveError := '601F SAFEOUT:Setup Hardware Fault: Diagnosis active Module. ReturnData:';
+	16#6020: sDriveError := '6020 SAFEOUT:Setup Hardware Fault: Diagnosis inactive Module. ReturnData:';
+	16#6021: sDriveError := '6021 SAFEOUT:Setup Hardware Fault: Feedback active Module. ReturnData:';
+	16#6022: sDriveError := '6022 SAFEOUT:Setup Hardware Fault: Feedback Diagnosis active Module. ReturnData:';
+	16#6023: sDriveError := '6023 SAFEOUT:Setup Hardware Fault: Feedback inactive Module. ReturnData:';
+	16#6024: sDriveError := '6024 SAFEOUT:Setup Hardware Fault: Feedback Diagnosis inactive Module. ReturnData:';
+	16#6025: sDriveError := '6025 SAFEOUT:Setup Hardware Fault: Channel Switch. ReturnData:';
+	16#6026: sDriveError := '6026 SAFEOUT:Setup Hardware Fault: Diagnosis active Channel. ReturnData:';
+	16#6027: sDriveError := '6027 SAFEOUT:Setup Hardware Fault: Diagnosis inactive Channel. ReturnData:';
+	16#6028: sDriveError := '6028 SAFEOUT:Setup Hardware Fault: Feedback active Channel. ReturnData:';
+	16#6029: sDriveError := '6029 SAFEOUT:Setup Hardware Fault: Feedback Diagnosis active Channel. ReturnData:';
+	16#602A: sDriveError := '602A SAFEOUT:Setup Hardware Fault: Feedback inactive Channel. ReturnData:';
+	16#602B: sDriveError := '602B SAFEOUT:Setup Hardware Fault: Feedback Diagnosis inactive Channel. ReturnData:';
+	16#6030: sDriveError := '6030 SAFEOUT:The Feedback of the active Module Switch is wrong. Module:';
+	16#6031: sDriveError := '6031 SAFEOUT:The Feedback of the inactive Module Switch is wrong. Module:';
+	16#6032: sDriveError := '6032 SAFEOUT:The Feedback of the active Channel Switch is wrong. Module: / Channel:';
+	16#6033: sDriveError := '6033 SAFEOUT:The Feedback of the inactive Channel Switch is wrong. Module: / Channel:';
+	16#6040: sDriveError := '6040 SAFEOUT:Diagnosis Test: Common Fault Module: / DiagChannel:';
+	16#6041: sDriveError := '6041 SAFEOUT:Diagnosis Test: Unknown State local ModuleState:';
+	16#6042: sDriveError := '6042 SAFEOUT:Diagnosis Test: Unknown State other ModuleState:';
+	16#6050: sDriveError := '6050 SAFEOUT:Diagnosis Test: Feedback active Module Switch is wrong (Step1 - check current state). Module:';
+	16#6051: sDriveError := '6051 SAFEOUT:Diagnosis Test: Feedback inactive Module Switch is wrong (Step1 - check current state). Module:';
+	16#6052: sDriveError := '6052 SAFEOUT:Diagnosis Test: Feedback active Channel Switch is wrong (Step1 - check current state). Module: / DiagChannel:';
+	16#6053: sDriveError := '6053 SAFEOUT:Diagnosis Test: Feedback inactive Channel Switch is wrong (Step1 - check current state). Module: / DiagChannel:';
+	16#6060: sDriveError := '6060 SAFEOUT:Diagnosis Test: Feedback active Module Switch is wrong (Step2 - check test pulse). Module:';
+	16#6061: sDriveError := '6061 SAFEOUT:Diagnosis Test: Feedback inactive Module Switch is wrong (Step2 - check test pulse). Module:';
+	16#6062: sDriveError := '6062 SAFEOUT:Diagnosis Test: Feedback active Channel Switch is wrong (Step2 - check test pulse). Module: / DiagChannel:';
+	16#6063: sDriveError := '6063 SAFEOUT:Diagnosis Test: Feedback inactive Channel Switch is wrong (Step2 - check test pulse). Module: / DiagChannel:';
+	16#6080: sDriveError := '6080 SAFEOUT:Diagnosis Test:VendorData. ID: Module:';
+	16#6081: sDriveError := '6081 SAFEOUT:Diagnosis Test:VendorData. ID: Module:';
+	16#6082: sDriveError := '6082 SAFEOUT:Diagnosis Test:VendorData. ID: Module:';
+	16#6083: sDriveError := '6083 SAFEOUT:Diagnosis Test:VendorData. Channel: Module:';
+	16#6084: sDriveError := '6084 SAFEOUT:Diagnosis Test:VendorData. Channel: Module:';
+	16#6085: sDriveError := '6085 SAFEOUT:Diagnosis Test:VendorData. Channel: Module:';
+	16#6086: sDriveError := '6086 SAFEOUT:Diagnosis Test:VendorData. Channel: Module:';
+	16#6090: sDriveError := '6090 SAFEOUT:Module Switch FeedbackTest ViolationCounter incremented';
+	16#6091: sDriveError := '6091 SAFEOUT:Module Switch FeedbackTest ViolationCounter incremented';
+	16#6092: sDriveError := '6092 SAFEOUT:Channel Switch FeedbackTest ViolationCounter incremented';
+	16#6093: sDriveError := '6093 SAFEOUT:Channel Switch FeedbackTest ViolationCounter incremented';
+	16#6094: sDriveError := '6094 SAFEOUT:Module Switch DiagnosisTest ViolationCounter incremented';
+	16#6095: sDriveError := '6095 SAFEOUT:Module Switch DiagnosisTest ViolationCounter incremented';
+	16#6096: sDriveError := '6096 SAFEOUT:Channel Switch DiagnosisTest ViolationCounter incremented';
+	16#6097: sDriveError := '6097 SAFEOUT:Channel Switch DiagnosisTest ViolationCounter incremented';
+	16#6098: sDriveError := '6098 SAFEOUT:Module Switch DiagnosisTest ViolationCounter incremented';
+	16#6099: sDriveError := '6099 SAFEOUT:Module Switch DiagnosisTest ViolationCounter incremented';
+	16#609A: sDriveError := '609A SAFEOUT:Channel Switch DiagnosisTest ViolationCounter incremented';
+	16#609B: sDriveError := '609B SAFEOUT:Channel Switch DiagnosisTest ViolationCounter incremented';
+	16#60A0: sDriveError := '60A0 SAFEOUT:Sercom Fault 0. Cmd/State:';
+	16#60A1: sDriveError := '60A1 SAFEOUT:Sercom Fault 1. Cmd/State:';
+	16#60B0: sDriveError := '60B0 SAFEOUT:Unknown Sercom Command Request 1. Cmd/State:';
+	16#60B1: sDriveError := '60B1 SAFEOUT:Unknown Sercom Command Answer 1. Cmd/State:';
+	16#60B2: sDriveError := '60B2 SAFEOUT:Unknown Sercom Command Request 2. Cmd/State:';
+	16#60B3: sDriveError := '60B3 SAFEOUT:Unknown Sercom Command Answer 2. Cmd/State:';
+	16#60C0: sDriveError := '60C0 SAFEOUT:Module Switch too fast Switching OFF detected Fault (see technical data). Module:';
+	16#60C1: sDriveError := '60C1 SAFEOUT:Channel Switch too fast Switching OFF detected Fault (see technical data). Module: / Channel:';
+	16#60C2: sDriveError := '60C2 SAFEOUT:Module Switch too fast Switching ON detected Fault (see technical data). Module:';
+	16#60C3: sDriveError := '60C3 SAFEOUT:Channel Switch too fast Switching ON detected Fault (see technical data). Module: / Channel:';
+	16#60C4: sDriveError := '60C4 SAFEOUT:Module Error Acknowledge is not possible. Module:';
+	16#60E0: sDriveError := '60E0 SAFEOUT:HAL Read Fault. ReturnData:';
+	16#60E1: sDriveError := '60E1 SAFEOUT:Init Fault. Module:';
+	16#8009: sDriveError := '8009 SAFEIN:Initial-Parameter: MultiplierDiagTestPulse has to be greater zero. ModuleNr:';
+	16#8010: sDriveError := '8010 SAFEIN:Initial-Parameter: Number of Modules incorrect. ModuleNr:';
+	16#8011: sDriveError := '8011 SAFEIN:Initial-Parameter: Number of Channels incorrect. Parameter0:';
+	16#8018: sDriveError := '8018 SAFEIN:Initial-Parameter: Number of Diagnosis active Channel incorrect. Parameter0:';
+	16#801B: sDriveError := '801B SAFEIN:Initial-Parameter: Number of Feedback Diagnosis active Channel incorrect. Parameter0:';
+	16#8025: sDriveError := '8025 SAFEIN:Setup Hardware Fault: Channel Switch. ReturnData:';
+	16#8026: sDriveError := '8026 SAFEIN:Setup Hardware Fault: Diagnosis active Channel. ReturnData:';
+	16#8029: sDriveError := '8029 SAFEIN:Setup Hardware Fault: Feedback Diagnosis active Channel. ReturnData:';
+	16#8040: sDriveError := '8040 SAFEIN:Diagnosis Test: Common Fault Module: / DiagChannel:';
+	16#8041: sDriveError := '8041 SAFEIN:Diagnosis Test: Unknown State local ModuleState:';
+	16#8042: sDriveError := '8042 SAFEIN:Diagnosis Test: Unknown State Other ModuleState:';
+	16#8043: sDriveError := '8043 SAFEIN Pulse Detection: Wrong pulse was detected at . Module: / DiagChannel:';
+	16#8044: sDriveError := '8044 SAFEIN Pulse Detection: Detected pulse from Module: / DiagChannel:';
+	16#8052: sDriveError := '8052 SAFEIN:Diagnosis Test: Feedback in Step1 active Channel is wrong. Module: / DiagChannel:';
+	16#8062: sDriveError := '8062 SAFEIN:Diagnosis Test: Feedback in Step2 active Channel is wrong. Module: / DiagChannel:';
+	16#8080: sDriveError := '8080 SAFEIN:Diagnosis Test:VendorData. ID: Module:';
+	16#8081: sDriveError := '8081 SAFEIN:Diagnosis Test:VendorData. ID: Module:';
+	16#8084: sDriveError := '8084 SAFEIN:Diagnosis Test:VendorData. Channel: Module:';
+	16#8085: sDriveError := '8085 SAFEIN:Diagnosis Test:VendorData. Channel: Module:';
+	16#8086: sDriveError := '8086 SAFEIN:Diagnosis Test:VendorData. Channel: Module:';
+	16#8096: sDriveError := '8096 SAFEIN:DiagnosisTest ViolationCounter incremented';
+	16#809A: sDriveError := '809A SAFEIN:DiagnosisTest ViolationCounter incremented';
+	16#80A0: sDriveError := '80A0 SAFEIN:Sercom Fault 0. Cmd/State:';
+	16#80A1: sDriveError := '80A1 SAFEIN:Sercom Fault 1. Cmd/State:';
+	16#80B0: sDriveError := '80B0 SAFEIN:Unknown Sercom Command Request 1. Cmd/State:';
+	16#80B1: sDriveError := '80B1 SAFEIN:Unknown Sercom Command Answer 1. Cmd/State:';
+	16#80B2: sDriveError := '80B2 SAFEIN:Unknown Sercom Command Request 2. Cmd/State:';
+	16#80B3: sDriveError := '80B3 SAFEIN:Unknown Sercom Command Answer 2. Cmd/State:';
+	16#80C0: sDriveError := '80C0 SAFEIN:Error Acknowledge is not possible. Module:';
+	16#80C1: sDriveError := '80C1 SAFEIN:Diagnosis Test: Implausible Inputs detected. Module:';
+	16#80C2: sDriveError := '80C2 SAFEIN:Diagnosis Test: Implausible Inputs detected (INFO). Parameter1: / Parameter2:';
+	16#80E0: sDriveError := '80E0 SAFEIN:Init HAL Fault.ReturnState:';
+	16#80E1: sDriveError := '80E1 SAFEIN:Init Fault. Module:';
+	16#80F0: sDriveError := '80F0 SAFEIN: Testpulse is parametrized but not enabled (Diag Testpulse for Inputs active). Module: / Channel:';
+	16#80F1: sDriveError := '80F1 SAFEIN: Testpulse is parametrized but not enabled (Diag TestPulse active). Module: / Channel:';
+	16#80F2: sDriveError := '80F2 SAFEIN: Testfilter-Time too long. Parameter1: / Parameter2:';
+	16#80F3: sDriveError := '80F3 SAFEIN: Inputfilter-Time too short. Parameter1: / Parameter2:';
+	16#80F4: sDriveError := '80F4 SAFEIN: Wrong parameters detected for Module: / Channel:. Please check parameters!';
+	16#D000: sDriveError := 'D000 ENCODER: Module: . No Error';
+	16#D010: sDriveError := 'D010 ENCODER: Module: in State . Microcontroller async detected. Info: .';
+	16#D020: sDriveError := 'D020 ENCODER: Module: in State . Encoder is in State Enabled and Voltage is too low. Info: .';
+	16#D021: sDriveError := 'D021 ENCODER: Module: in State . Encoder is in State To Enabled and Voltage is too low. Info: .';
+	16#D070: sDriveError := 'D070 ENCODER: Module: in State . Encoder is in State Disabled and Voltage is too high. Info: .';
+	16#D071: sDriveError := 'D071 ENCODER: Module: in State . Encoder is in State To Disabled and Voltage is too high. Info: .';
+	16#D072: sDriveError := 'D072 ENCODER: Module: in State . Encoder is in State To Enable and Voltage is too high. Info: .';
+	16#D073: sDriveError := 'D073 ENCODER: Module: in State . Encoder is in State Enabled and Voltage is too high. Info: .';
+	16#D180: sDriveError := 'D180 Primary MC: SAFETY FEEDBACK Module: in State . No Error';
+	16#D181: sDriveError := 'D181 Primary MC: SAFETY FEEDBACK Module: in State . No new Position received';
+	16#D182: sDriveError := 'D182 Primary MC: SAFETY FEEDBACK Module: . Invalid Position. Errorcode: Info:';
+	16#D183: sDriveError := 'D183 Primary MC: SAFETY FEEDBACK Module: in State . AX8yxx reports Feedback Error';
+	16#D184: sDriveError := 'D184 Primary MC: SAFETY FEEDBACK Module: . Safety OCT Feedback not supported by Hardware';
+	16#D185: sDriveError := 'D185 Primary MC: SAFETY FEEDBACK Module: . EnDat2.2 Feedback not supported by Hardware';
+	16#D186: sDriveError := 'D186 Primary MC: SAFETY FEEDBACK Invalid drive application data received. Invalid CRC. Module Id: Calculated CRC: Received CRC:';
+	16#D187: sDriveError := 'D187 Primary MC: SAFETY FEEDBACK Invalid drive application data received. Invalid Command: Module Id: type:';
+	16#D188: sDriveError := 'D188 Primary MC: SAFETY FEEDBACK Module: . configured Safety User Parameter CRC did not match with Feedback Parameter CRC';
+	16#D189: sDriveError := 'D189 Primary MC: SAFETY FEEDBACK Module: . Module state sync error. local: other:';
+	16#D18A: sDriveError := 'D18A Primary MC: SAFETY FEEDBACK: AX8000 FPGA is not validated with this firmware. Elapsed time: seconds';
+	16#D18B: sDriveError := 'D18B Primary MC: SAFETY FEEDBACK Module: . Stored Feedback Parameter CRC and Safety User Parameter CRC did not match';
+	16#D18C: sDriveError := 'D18C Primary MC: SAFETY FEEDBACK Module: . Encoder Safety User Parameter CRC configured but Drive Application (Slot Configuration) not set';
+	16#D18D: sDriveError := 'D18D Primary MC: SAFETY FEEDBACK Module: . Cannot enable because module is not configured. State: DriveAppl:';
+	16#D18E: sDriveError := 'D18E Primary MC: SAFETY FEEDBACK Module: . Double used Parameter CRC . Info:';
+	16#D18F: sDriveError := 'D18F Primary MC: SAFETY FEEDBACK Module: . Encoder Voltage not enabled. State:';
+	16#D190: sDriveError := 'D190 Primary MC: SAFETY FEEDBACK Module: . Encoder data buffer overrun. State:';
+	16#D191: sDriveError := 'D191 Primary MC: SAFETY FEEDBACK Module: . Cannot read Encoder info block. Return Code: Info:';
+	16#D192: sDriveError := 'D192 Primary MC: SAFETY FEEDBACK Invalid drive application data received. Module Id exceeded: Expected max:';
+	16#D193: sDriveError := 'D193 Primary MC: SAFETY FEEDBACK Invalid drive application data received. Data length too long: Expected max:';
+	16#D194: sDriveError := 'D194 Primary MC: SAFETY FEEDBACK Invalid drive application data received. Data length too short: Expected min:';
+	16#D195: sDriveError := 'D195 Primary MC: SAFETY FEEDBACK Module: . Invalid drive application data received. Not allowed in this state: Command:';
+	16#D196: sDriveError := 'D196 Primary MC: SAFETY FEEDBACK Module: . Error during position calculation. Info:';
+	16#D197: sDriveError := 'D197 Primary MC: SAFETY FEEDBACK Invalid Safety FPGA interface version. Info:';
+	16#D198: sDriveError := 'D198 Primary MC: SAFETY FEEDBACK Module: . Invalid Safedrive Settings Parameter. value:';
+	16#D199: sDriveError := 'D199 Primary MC: SAFETY FEEDBACK Module: . Not supported by this firmware. CRC:';
+	16#D280: sDriveError := 'D280 Secondary MC: SAFETY FEEDBACK Module: in State . No Error';
+	16#D281: sDriveError := 'D281 Secondary MC: SAFETY FEEDBACK Module: in State . No new Position received';
+	16#D282: sDriveError := 'D282 Secondary MC: SAFETY FEEDBACK Module: . Invalid Position. Errorcode: Info:';
+	16#D283: sDriveError := 'D283 Secondary MC: SAFETY FEEDBACK Module: in State . AX8yxx reports Feedback Error';
+	16#D284: sDriveError := 'D284 Secondary MC: SAFETY FEEDBACK Module: . Safety OCT Feedback not supported by Hardware';
+	16#D285: sDriveError := 'D285 Secondary MC: SAFETY FEEDBACK Module: . EnDat2.2 Feedback not supported by Hardware';
+	16#D286: sDriveError := 'D286 Secondary MC: SAFETY FEEDBACK Invalid drive application data received. Invalid Command. Module Id: type: Command:';
+	16#D287: sDriveError := 'D287 Secondary MC: SAFETY FEEDBACK Invalid drive application data received. Invalid Command: Module Id: type:';
+	16#D288: sDriveError := 'D288 Secondary MC: SAFETY FEEDBACK Module: . configured Safety User Parameter CRC did not match with Feedback Parameter CRC';
+	16#D289: sDriveError := 'D289 Secondary MC: SAFETY FEEDBACK Module: . Module state sync error. local: other:';
+	16#D28A: sDriveError := 'D28A Secondary MC: SAFETY FEEDBACK: AX8000 FPGA is not validated with this firmware. Elapsed time: seconds';
+	16#D28B: sDriveError := 'D28B Secondary MC: SAFETY FEEDBACK Module: . Stored Feedback Parameter CRC and Safety User Parameter CRC did not match';
+	16#D28C: sDriveError := 'D28C Secondary MC: SAFETY FEEDBACK Module: . Encoder Safety User Parameter CRC configured but Drive Application (Slot Configuration) not set';
+	16#D28D: sDriveError := 'D28D Secondary MC: SAFETY FEEDBACK Module: . Cannot enable because module is not configured. State: DriveAppl:';
+	16#D28E: sDriveError := 'D28E Secondary MC: SAFETY FEEDBACK Module: . Double used Parameter CRC . Info:';
+	16#D28F: sDriveError := 'D28F Secondary MC: SAFETY FEEDBACK Module: . Encoder Voltage not enabled. State:';
+	16#D290: sDriveError := 'D290 Secondary MC: SAFETY FEEDBACK Module: . Encoder data buffer overrun. State:';
+	16#D291: sDriveError := 'D291 Secondary MC: SAFETY FEEDBACK Module: . Cannot read Encoder info block. Return Code: Info:';
+	16#D292: sDriveError := 'D292 Secondary MC: SAFETY FEEDBACK Invalid drive application data received. Module Id exceeded: Expected max:';
+	16#D293: sDriveError := 'D293 Secondary MC: SAFETY FEEDBACK Invalid drive application data received. Data length too long: Expected max:';
+	16#D294: sDriveError := 'D294 Secondary MC: SAFETY FEEDBACK Invalid drive application data received. Data length too short: Expected min:';
+	16#D295: sDriveError := 'D295 Secondary MC: SAFETY FEEDBACK Module: . Invalid drive application data received. Not allowed in this state: Command:';
+	16#D296: sDriveError := 'D296 Secondary MC: SAFETY FEEDBACK Module: . Error during position calculation. Info:';
+	16#D297: sDriveError := 'D297 Secondary MC: SAFETY FEEDBACK Invalid Safety FPGA interface version. Info:';
+	16#D298: sDriveError := 'D298 Secondary MC: SAFETY FEEDBACK Module: . Invalid Safedrive Settings Parameter. value:';
+	16#D299: sDriveError := 'D299 Secondary MC: SAFETY FEEDBACK Module: . Not supported by this firmware. CRC:';
+	16#D300: sDriveError := 'D300 SafeMotion Axis A Diag Message 1';
+	16#D301: sDriveError := 'D301 SafeMotion Axis A Diag Message 2';
+	16#D302: sDriveError := 'D302 SafeMotion Axis A Diag Message 3';
+	16#D303: sDriveError := 'D303 SafeMotion Axis A Diag Message 4';
+	16#D304: sDriveError := 'D304 SafeMotion Axis A Diag Message 5';
+	16#D305: sDriveError := 'D305 SafeMotion Axis A Diag Message 6';
+	16#D306: sDriveError := 'D306 SafeMotion Axis A Diag Message 7';
+	16#D307: sDriveError := 'D307 SafeMotion Axis A Diag Message 8';
+	16#D308: sDriveError := 'D308 SafeMotion Axis A Diag Message 9';
+	16#D309: sDriveError := 'D309 SafeMotion Axis A Diag Message 10';
+	16#D30A: sDriveError := 'D30A SafeMotion Axis A Diag Message 11';
+	16#D30B: sDriveError := 'D30B SafeMotion Axis A Diag Message 12';
+	16#D30C: sDriveError := 'D30C SafeMotion Axis A Diag Message 13';
+	16#D30D: sDriveError := 'D30D SafeMotion Axis A Diag Message 14';
+	16#D30E: sDriveError := 'D30E SafeMotion Axis A Diag Message 15';
+	16#D30F: sDriveError := 'D30F SafeMotion Axis A Diag Message 16';
+	16#D310: sDriveError := 'D310 SafeMotion Axis B Diag Message 1';
+	16#D311: sDriveError := 'D311 SafeMotion Axis B Diag Message 2';
+	16#D312: sDriveError := 'D312 SafeMotion Axis B Diag Message 3';
+	16#D313: sDriveError := 'D313 SafeMotion Axis B Diag Message 4';
+	16#D314: sDriveError := 'D314 SafeMotion Axis B Diag Message 5';
+	16#D315: sDriveError := 'D315 SafeMotion Axis B Diag Message 6';
+	16#D316: sDriveError := 'D316 SafeMotion Axis B Diag Message 7';
+	16#D317: sDriveError := 'D317 SafeMotion Axis B Diag Message 8';
+	16#D318: sDriveError := 'D318 SafeMotion Axis B Diag Message 9';
+	16#D319: sDriveError := 'D319 SafeMotion Axis B Diag Message 10';
+	16#D31A: sDriveError := 'D31A SafeMotion Axis B Diag Message 11';
+	16#D31B: sDriveError := 'D31B SafeMotion Axis B Diag Message 12';
+	16#D31C: sDriveError := 'D31C SafeMotion Axis B Diag Message 13';
+	16#D31D: sDriveError := 'D31D SafeMotion Axis B Diag Message 14';
+	16#D31E: sDriveError := 'D31E SafeMotion Axis B Diag Message 15';
+
+	
+// Device Main
+	//16#3210: sDriveError := '3210 DC link overvoltage';
+	//16#4380: sDriveError := '4380 Fan speed seems to be zero.';
+	//16#5112: sDriveError := '5112 Supply undervoltage: supply +24V';
+	//16#5181: sDriveError := '5181 Power supply controlword';
+	//16#5182: sDriveError := '5182 Power supply controlword';
+	//16#5183: sDriveError := '5183 Power supply controlword';
+	//16#5185: sDriveError := '5185 Power supply controlword';
+	//16#5186: sDriveError := '5186 Power supply controlword';
+	//16#5192: sDriveError := '5192 Supply overvoltage: supply +24V';
+	//16#6320: sDriveError := '6320 Parameter error in Object 0x%x/%x';
+	//16#8780: sDriveError := '8780 Configured Sync1 Cycle Time is above Maximum';
+	//16#8781: sDriveError := '8781 Configured Sync1 Cycle Time is below Minimum';
+	//16#8782: sDriveError := '8782 Configured Sync1 Cycle Time is not a multiple of the Sync0 Cycle Time';
+	//16#8783: sDriveError := '8783 Configured Sync0 Cycle Time is not legal';
+	//16#A017: sDriveError := ' A017 Pdo Mapping Error: Object has to be mapped always.';
+	
+//Axis Main
+	16#2340: sDriveError := '2340 Short circuit (motor-side)';
+	16#2380: sDriveError := '2380 Continuous over current (device output side) Phase U';
+	16#2381: sDriveError := '2381 Continuous over current (device output side) Phase V';
+	16#2382: sDriveError := '2382 Continuous over current (device output side) Phase W';
+	16#2383: sDriveError := '2383 Phase U current offset out of range';
+	16#2384: sDriveError := '2384 Phase V current offset out of range';
+	16#2385: sDriveError := '2385 Phase W current offset out of range';
+	16#2386: sDriveError := '2386 Motor brake current offset out of range';
+	16#3180: sDriveError := '3180 Phase failure motor';
+	16#3220: sDriveError := '3220 DC link under-voltage';
+	16#3280: sDriveError := '3280 DC link is not ready';
+	16#4310: sDriveError := '4310 Drive overtemperature shut down';
+	16#5180: sDriveError := '5180 Output stage STO active.';
+	16#5184: sDriveError := '5184 Supply DC link circuit is not ready';
+	16#5187: sDriveError := '5187 Power supply communication is not established';
+	16#5441: sDriveError := '5441 Positive limit switch active';
+	16#5442: sDriveError := '5442 Negative limit switch active';
+	16#5443: sDriveError := '5443 Loss of the hardware enable';
+	16#5444: sDriveError := '5444 Loss of the hardware enable (Reaction TorqueOff)';
+	16#54B1: sDriveError := '54B1 Positive limit switch active';
+	16#54B2: sDriveError := '54B2 Negative limit switch active';
+	16#5595: sDriveError := '5595 Modulo remainder will not be stored.';
+	16#589C: sDriveError := '589C Read failure EEPROM';
+	16#6183: sDriveError := '6183 Internal Watchdog Error';
+	16#638A: sDriveError := '638A The Axis seems not to be parameterized.';
+	16#6390: sDriveError := '6390 Factor Group Parameters: Feed constant illegal feed';
+	16#6391: sDriveError := '6391 Factor Group Parameters: Feed constant illegal shaft revolutions';
+	16#6392: sDriveError := '6392 Factor Group Parameters: Gear ratio illegal Motor shaft revolutions';
+	16#6393: sDriveError := '6393 Factor Group Parameters: Gear ratio illegal Driving shaft revolutions';
+	16#6394: sDriveError := '6394 Factor Group Parameters: Position encoder resolution illegal encoder increments';
+	16#6395: sDriveError := '6395 Factor Group Parameters: Position encoder resolution illegal motor revolutions';
+	16#6396: sDriveError := '6396 additional Factor Group Parameters: Feed constant illegal feed';
+	16#6397: sDriveError := '6397 additional Factor Group Parameters: Feed constant illegal shaft revolutions';
+	16#6398: sDriveError := '6398 additional Factor Group Parameters: Gear ratio illegal Motor shaft revolutions';
+	16#6399: sDriveError := '6399 additional Factor Group Parameters: Gear ratio illegal Driving shaft revolutions';
+	16#639A: sDriveError := '639A additional Factor Group Parameters: Position encoder resolution illegal encoder increments';
+	16#639B: sDriveError := '639B additional Factor Group Parameters: Position encoder resolution illegal motor revolutions';
+	16#639C: sDriveError := '639C Velocity factor illegal';
+	16#639D: sDriveError := '639D Acceleration factor illegal';
+	16#639E: sDriveError := '639E Scaling index object 0x%x does not fit the Factor group parameters for the first Encoder';
+	16#639F: sDriveError := '639F Scaling index object 0x%x does not fit the Factor group parameters for the second Encoder';
+	16#63A0: sDriveError := '63A0 Motor or Primary Feedback changed';
+	16#63A1: sDriveError := '63A1 Secondary Feedback changed';
+	16#63A2: sDriveError := '63A2 Offset position actual value: No position offset existing in source encoder memory';
+	16#63A3: sDriveError := '63A3 Offset additional position actual value: No position offset existing in source encoder memory';
+	16#63A4: sDriveError := '63A4 Offset position actual value: No position offset existing in source drive memory';
+	16#63A5: sDriveError := '63A5 Offset additional position actual value: No position offset existing in source drive memory';
+	16#63A6: sDriveError := '63A6 Jerk factor illegal';
+	16#63A7: sDriveError := '63A7 The range %u of the Position range limit is below the minimum accepted value of %u.';
+	16#63A8: sDriveError := '63A8 Position range limit Inc with remainder is not supported for primary feedback.';
+	16#63A9: sDriveError := '63A9 Position range limit Inc with remainder is not supported for secondary feedback.';
+	16#63AA: sDriveError := '63AA Object 0x%X/%X changed in EtherCAT SafeOP or OP.';
+	16#7180: sDriveError := '7180 Motor brake: Current monitoring error.';
+	16#7380: sDriveError := '7380 Current sensor motor phase U';
+	16#7381: sDriveError := '7381 Current sensor motor phase V';
+	16#7382: sDriveError := '7382 Current sensor motor phase W';
+	16#8182: sDriveError := '8182 EtherCAT Statemachine shutdown with enabled Axis';
+	16#8183: sDriveError := '8183 Controlword output cycle counter monitoring';
+	16#8184: sDriveError := '8184 Dynoutput cycle counter monitoring';
+	16#8185: sDriveError := '8185 Axis needs an extended fault reset command';
+	16#8A80: sDriveError := '8A80 Illegal Modes Of Operation';
+	16#8A81: sDriveError := '8A81 Illegal Modes Of Operation change';
+	//16#A017: sDriveError := 'A017 Pdo Mapping Error: Object has to be mapped always.';
+	16#FF01: sDriveError := 'FF01 Init Timeout';
+	16#FF07: sDriveError := 'FF07 Error reaction forced: Torque Off';
+	16#FF08: sDriveError := 'FF08 Error reaction forced: Shorted Coils Brake';
+	16#FF09: sDriveError := 'FF09 Error reaction forced: Open Loop Ramp';
+	16#FF0A: sDriveError := 'FF0A Error reaction forced: Closed Loop Ramp';
+	16#FF0B: sDriveError := 'FF0B Error reaction forced: NC handling';
+	16#FF0C: sDriveError := 'FF0C Error reaction TorqueOff with emergency brake';
+	
+//Interpolator
+	//16#6320: sDriveError := '6320 Parameter error in Object';
+	16#6386: sDriveError := '6386 Parameter Interpolator: Illegal NC-Task cycle time';
+	16#8680: sDriveError := '8680 Position Demand Value outside of the specified Position Range Limits';
+	16#A01A: sDriveError := 'A01A TxPdo Mapping Error: Object 0x%x/%x has to be mapped for modes of operation %d.';
+
+// Position Control
+	16#8611: sDriveError := '8611 Following error';
+	
+// Velocity Control
+	16#3183: sDriveError := '3183 The bipolar velocity limit is higher than 1/4 of position range limit per EtherCAT Sync1 cycle.';
+	16#7186: sDriveError := '7186 Detected moving axis on enable transition.';
+	16#8480: sDriveError := '8480 Overspeed error';
+	
+// BiQuad Filter
+	//16#6320: sDriveError := '6320,Parameter error in object 0x%x/%x';
+	16#63AB: sDriveError := '63AB,The filter parameterization is not valid';
+
+// Torque Control
+	16#2330: sDriveError := '2330 Earth leakage (motor-side)';
+	16#2390: sDriveError := '2390 Amplifier overload utilization';
+	16#3181: sDriveError := '3181 Phase frequency (motor-side) raised above 600 Hz';
+	16#3182: sDriveError := '3182 Velocity actual Value raised above the max channel accepted velocity';
+	//16#6320: sDriveError := '6320 Parameter error in object 0x%x/%x';
+	16#6388: sDriveError := '6388 Parameter Torque Control: The value in object 0x%x/%x is higher then the motor peak current (0x%x/%x).';
+	16#6389: sDriveError := '6389 Parameter Torque Control: The value in object 0x%x/%x is higher then the configured peak current (0x%x/%x).';
+	16#638F: sDriveError := '638F Parameter Torque Control: The value in Object 0x%x/%x is higher then the Motor maximum voltage slope (0x%x/%x).';
+
+	
+// OCT Rotary
+	16#7320: sDriveError := '7320 HpfDsl: Encoder error (position invalid)';
+	//16#7380: sDriveError := '7380 HpfDsl: Encoder start sequence failed';
+	//16#7381: sDriveError := '7381 HpfDsl: Encoder shutdown failed';
+	//16#7382: sDriveError := '7382 HpfDsl: Parameter access error';
+	16#7383: sDriveError := '7383 HpfDsl: Internal error';
+	16#7384: sDriveError := '7384 HpfDsl: Cyclic monitoring error';
+	16#7385: sDriveError := '7385 HpfDsl: Encoder file processing';
+	16#7386: sDriveError := '7386 HpfDsl: Found no encoder (No link to an encoder)!';
+	16#7387: sDriveError := '7387 HpfDsl: The encoder doesnt meet the specified policies';
+	16#7388: sDriveError := '7388 HpfDsl: Encoder power off (triggered from SafeCu), Id, Arg';
+	16#7389: sDriveError := '7389 HpfDsl: Encoder interface resistance check failed. Measured resistance is too low! R Ohm';
+	16#738A: sDriveError := '738A Loaded fpga is not verified.';
+	16#738B: sDriveError := '738B HpfDsl: Internal warning! The error inducer is available.';
+	16#63AC: sDriveError := '63AC Encoder simulation is not supported for the selected motor type. (ModuleIdent )';
+	16#738C: sDriveError := '738C HpfDsl: Encoder seems to be offline for %u cycles. (InternalDbg: %u)';
+
+// Sync Servo Motor
+	//16#6320: sDriveError := '6320 Parameter error in Object 0x%x/%x';
+	16#6387: sDriveError := '6387 Parameter Motor';
+	//16#638A: sDriveError := ' 638A The Axis seems not to be parameterized.';
+	16#638B: sDriveError := ' 638B Parameter Torque Current curve: Unable to calculate Torque Current curve.';
+	16#638C: sDriveError := ' 638C Motor type does not match';
+	16#638D: sDriveError := ' 638D Connected Motor is compatible to the configured Motor';
+	16#638E: sDriveError := ' 638E The Motor brake is automatically unlocked';
+	16#7122: sDriveError := '7122 Motor error or commutation malfunction';
+	16#7181: sDriveError := '7181 Motor thermal utilization has reached the warning level';
+	16#7182: sDriveError := '7182 Motor thermal utilization has left the warning level';
+	16#7183: sDriveError := '7183 Motor thermal utilization has reached the Error Level';
+	16#7184: sDriveError := '7184 Motor overload shut down';
+	16#7185: sDriveError := '7185 Motor overtemperature shut down';
+	//16#7186: sDriveError := '7186 Commutation offset source: No commutation offset existing in source encoder memory';
+	16#7187: sDriveError := '7187 Cogging compensation init error, Additional Errorcode';
+	16#7188: sDriveError := '7188 Motor overtemperature warning';
+	16#7189: sDriveError := '7189 Invalid motor temperature sensor characteristic';
+	16#718A: sDriveError := '718A Invalid motor temperature sensor data';
+	16#718B: sDriveError := '718B Invalid motor inductance characteristic';
+
+// Asynch
+	//16#6320: sDriveError := '6320Parameter error in Object';
+	//16#6387: sDriveError := '6387Parameter Motor. The configured DCLink Max Voltage is higher then the Motor Max Voltage.';
+	//16#638A: sDriveError := '638AThe Axis seems not to be parameterized.';
+	//16#638B: sDriveError := '638BParameter Torque Current curve: Unable to calculate Torque Current curve.';
+	//16#638C: sDriveError := '638CMotor type does not match';
+	//16#638D: sDriveError := '638DConnected Motor is compatible to the configured Motor';
+	//16#638E: sDriveError := '638EThe Motor brake is automatically unlocked';
+	//16#7122: sDriveError := '7122Motor error or commutation malfunction';
+	//16#7181: sDriveError := '7181Motor thermal utilization has reached the warning level';
+	//16#7182: sDriveError := '7182Motor thermal utilization has left the warning level';
+	//16#7183: sDriveError := '7183Motor thermal utilization has reached the Error Level';
+	//16#7184: sDriveError := '7184Motor overload shut down';
+	//16#7185: sDriveError := '7185Motor overtemperature shut down';
+	//16#7186: sDriveError := '7186Commutation offset source: No commutation offset existing in source encoder memory';
+	//16#7187: sDriveError := '7187Cogging compensation init error, Additional Errorcode';
+	//16#7188: sDriveError := '7188Motor overtemperature warning';
+	//16#7189: sDriveError := '7189Invalid motor temperature sensor characteristic';
+	//16#718A: sDriveError := '718AInvalid motor temperature sensor data';
+	//16#718B: sDriveError := '718BInvalid motor inductance characteristic';
+
+
+
+		
+ELSE
+	sDriveError := UINT_TO_STRING(nDriveError);
+	sDriveError := concat(sDriveError, ' Unknown Error code');
+END_CASE
+
+</xhtml>
+                    </ST>
+                  </body>
+                  <addData>
+                    <data name="http://www.3s-software.com/plcopenxml/objectid" handleUnknown="discard">
+                      <ObjectId>6a0391c1-a9a7-4fb6-b481-78d89c25331b</ObjectId>
+                    </data>
+                  </addData>
+                </action>
+                <action name="_ethercat">
+                  <body>
+                    <ST>
+                      <xhtml xmlns="http://www.w3.org/1999/xhtml">
+
+CASE nDriveEcState OF 
+	
+16#1 :				sDriveEcState := 'INIT state';
+16#2 : 				sDriveEcState := 'PREOP state';
+16#3 : 				sDriveEcState := 'BOOT state';
+16#4 : 				sDriveEcState := 'SAFEOP state';
+16#8 : 				sDriveEcState := 'OP state';
+16#10..16#19 : 		sDriveEcState := 'Slave Error';
+16#20..16#29 : 		sDriveEcState := 'Invalid Vendor ID';
+16#40..16#49 : 		sDriveEcState := 'Init Error Occured';
+16#80..16#89 : 		sDriveEcState := 'Slave Disabled';
+16#100..16#109 : 	sDriveEcState := 'Slave Not Present';
+16#200..16#209 : 	sDriveEcState := 'Slave Link Error';
+16#400..16#409 : 	sDriveEcState := 'Slave Missing Link';
+16#800..16#809 : 	sDriveEcState := 'Slave Unexpected Link';
+16#1000..16#1009 : 	sDriveEcState := 'Communication Port A';
+16#2000..16#2009 : 	sDriveEcState := 'Communication Port B';
+16#3000..16#3009 : 	sDriveEcState := 'Communication Port C';
+16#4000..16#4009 : 	sDriveEcState := 'Communication Port D';
+
+END_CASE
+</xhtml>
+                    </ST>
+                  </body>
+                  <addData>
+                    <data name="http://www.3s-software.com/plcopenxml/objectid" handleUnknown="discard">
+                      <ObjectId>d4aced07-e856-09b1-046b-f4f1db871967</ObjectId>
+                    </data>
+                  </addData>
+                </action>
+                <action name="_nc">
+                  <body>
+                    <ST>
+                      <xhtml xmlns="http://www.w3.org/1999/xhtml">
+(* https://infosys.beckhoff.com/english.php?content=../content/1033/tc3ncerrcode/1521556875.html&amp;id= *)
+
+
+CASE nNcError OF
+	
+
+// General NC Errors -----------------------------------------------------------------------------------------------------
+
+0		: sNcError := '0 No Error';
+16384	: sNcError := '16384 Internal Error';
+16385	: sNcError := '16385 Memory Error';
+16386	: sNcError := '16386 Nc retain data error (presistant data)';
+16387	: sNcError := '16387 Parameter for monitoring the NC Setpoint issuing is Invalid';
+16388	: sNcError := '16388 External Error';
+16400	: sNcError := '16400 Channel identifier not allowed';	
+16401	: sNcError := '16401 Group identifier not allowed';
+16402	: sNcError := '16402 Axis identifier not allowed';
+16403	: sNcError := '16403 Encoder identifier not allowed';
+16404	: sNcError := '16404 Controller identifier not allowed';
+16405	: sNcError := '16405 Drive identifier not allowed';
+16406	: sNcError := '16406 Table identifier not allowed';
+16416	: sNcError := '16416 No PLC-Axis process image';
+16417	: sNcError := '16417 No Axis-PLC process image';
+16418	: sNcError := '16418 No Encoder-IO process image';	
+16419	: sNcError := '16419 No IO-Encoder process image';
+16420	: sNcError := '16420 No Drive-IO process image';	
+16421	: sNcError := '16421 No IO-Drive process image';
+16432	: sNcError := '16432 Coupling type not allowed';
+16433	: sNcError := '16433 Axis type not allowed';
+16434	: sNcError := '16434 Unknown channel type';
+16448	: sNcError := '16448 Axis is incompatible';
+16464	: sNcError := '16464 Channel not ready for operation';
+16465	: sNcError := '16465 Group not ready for operaation';
+16466	: sNcError := '16466 Axis not ready for operation';
+16480	: sNcError := '16480 Channel already exists';
+16481	: sNcError := '16481 Group already exists';
+16482	: sNcError := '16482 Axis already exists';
+16483	: sNcError := '16483 Table already exists';
+16496	: sNcError := '16496 Axis index not allowed for channel';
+16497	: sNcError := '16497 Axis index not allowed for group';
+	
+	
+// Channel Errors -----------------------------------------------------------------------------------------------------
+
+
+16641   : sNcError := '16641 Parameter: Group index not allowed. The specified group location within the channel is invalid.';
+16642   : sNcError := '16642 Address: Null pointer. The pointer to the group is invalid, usually due to an error during system start.';
+16643   : sNcError := '16643 Internal: Missing process image. Data exchange with the PLC is not possible. Possible causes: no interface or faulty connection.';
+16644   : sNcError := '16644 Parameter: M-function index not allowed. Unacceptable M-function (not 0...159) detected at the execution level.';
+16645   : sNcError := '16645 Memory: No memory. No more system memory available, usually due to another error.';
+16646   : sNcError := '16646 Function: Not ready. The function is unavailable because a similar function is already being processed, often due to access conflicts.';
+16647   : sNcError := '16647 Function: Function/command not supported. The requested function or command is not supported by the channel.';
+16648   : sNcError := '16648 Parameter: Invalid parameter while starting. Invalid parameters for starting the channel (e.g., memory size or channel type).';
+16649   : sNcError := '16649 Function: Channel function (command) is not executable. The function cannot be executed because the channel is busy, no program is loaded, or its in an error state.';
+16650   : sNcError := '16650 Function: ItpGoAhead is not executable. The ItpGoAhead command is not executable because the interpreter is not executing a decoder stop.';
+16656   : sNcError := '16656 Parameter: Error opening a file. The specified file does not exist, e.g., unknown NC program.';
+16657   : sNcError := '16657 NC programming: Syntax error when loading. The NC found a syntax error when loading an NC program.';
+16658   : sNcError := '16658 NC programming: Syntax error when interpreting. The NC found a syntax error when processing an NC program.';
+16659   : sNcError := '16659 NC programming: Missing subroutine. The NC found a missing subroutine while loading.';
+16660   : sNcError := '16660 Memory: Loading buffer of interpreter is too small. The interpreter loading buffer capacity has been exceeded.';
+16661   : sNcError := '16661 Internal: Symbolism. Reserved, not currently used.';
+16662   : sNcError := '16662 Internal: Symbolism. Reserved, not currently used.';
+16663   : sNcError := '16663 NC programming: Subroutine incomplete. The header of the subroutine is missing.';
+16664   : sNcError := '16664 NC programming: Error while loading the NC program. The maximum number of loadable NC programs has been reached, usually due to too many subprograms loaded from a main program.';
+16665   : sNcError := '16665 NC programming: Error while loading the NC program. The program name is too long.';
+16672   : sNcError := '16672 NC programming: Divide by Zero. The NC encountered a division by zero during execution.';
+16673   : sNcError := '16673 NC programming: Invalid circle parameterization. The NC detected an uncalculable circle during processing.';
+16674   : sNcError := '16674 NC programming: Invalid FPU-Operation. The NC encountered an invalid FPU-Operation, e.g., calculating the square root of a negative number.';
+16688   : sNcError := '16688 NC programming: Stack overflow: Subroutines. Too many subroutine levels caused a stack overflow during processing.';
+16689   : sNcError := '16689 NC programming: Stack underflow: Subroutines. Too many subroutine return commands caused a stack underflow during processing.';
+16690   : sNcError := '16690 NC programming: Stack overflow: Arithmetic unit. A stack overflow occurred during processing due to a complex or incorrect calculation.';
+16691   : sNcError := '16691 NC programming: Stack underflow: Arithmetic unit. A stack underflow occurred during processing due to a complex or incorrect calculation.';
+16704   : sNcError := '16704 Parameter: Register index not allowed. The NC detected an invalid register index during processing.';
+16705   : sNcError := '16705 NC programming: G-function index not allowed. The NC encountered an unacceptable G-function (not 0...159) during execution.';
+16706   : sNcError := '16706 NC programming: M-function index not allowed. The NC encountered an unacceptable M-function (not 0...159) during execution.';
+16707   : sNcError := '16707 NC programming: Extended address specification not allowed. The NC encountered an unacceptable extended address (not 1...9) during execution.';
+16708   : sNcError := '16708 NC programming: Index to the internal H-function not allowed. The NC encountered an unacceptable internal H-function during processing.';
+16709   : sNcError := '16709 Parameter: Machine data value not allowed. The NC detected an impermissible value for the machine data (MDB) (not 0…7).';
+16720   : sNcError := '16720 Parameter: Tool compensation parameters cannot be changed here. Unacceptable change of parameters for tool compensation during execution.';
+16721   : sNcError := '16721 Parameter: Cannot calculate tool compensation. The NC encountered an error in the calculation of the tool compensation.';
+16722   : sNcError := '16722 NC programming: Tool compensation. The plane for the tool compensation cannot be changed here. This error occurs when changing the plane with active tool radius compensation.';
+16723   : sNcError := '16723 NC programming: Tool compensation. The D-Word is missing or invalid when turning on the tool compensation.';
+16724   : sNcError := '16724 NC programming: Tool compensation. The specified tool radius is invalid because the value is less or equal to zero.';
+16725   : sNcError := '16725 NC programming: Tool compensation. The tool radius cannot be changed here.';
+16726   : sNcError := '16726 Internal: Tool compensation. The collision detection table is full.';
+16727   : sNcError := '16727 Internal: Tool compensation. An internal error occurred when switching on the bottleneck detection.';
+16728   : sNcError := '16728 Internal: Tool compensation. An internal error occurred in the bottleneck detection: Update Reversed Geo failed.';
+16729   : sNcError := '16729 NC programming: Tool compensation. An unexpected combination of geometry types with bottleneck detection turned on was detected.';
+16730   : sNcError := '16730 NC programming: Tool compensation. The programmed inner circle is smaller than the cutter radius.';
+16731   : sNcError := '16731 NC programming: Tool compensation. The bottleneck detection recognized a contour violation.';
+16732   : sNcError := '16732 Memory: No memory. The table for corrected entries is full.';
+16733   : sNcError := '16733 Memory: No memory. The input table for tangential following is full.';
+16734   : sNcError := '16734 Memory: No memory. The executing table for tangential following is full.';
+16735   : sNcError := '16735 Internal: Geometry calculation. The geometric entry for the tangential following cannot be calculated.';
+16736   : sNcError := '16736 Internal: Reserved. Reserved, not currently used.';
+16737   : sNcError := '16737 Internal: Reserved. Reserved, not currently used.';
+16738   : sNcError := '16738 Parameter: Interpolation rules cannot be determined. The actual active interpolation rules (G-Code), zero offset shifts, or rotation cannot be detected.';
+16752   : sNcError := '16752 NC programming: Error loading: invalid parameter. The NC found an invalid parameter while loading an NC program.';
+16753   : sNcError := '16753 Internal: Invalid contour start position. The NC detected a calculation error: The start position is not on the contour.';
+16754   : sNcError := '16754 Internal: Reverse: invalid table index. The NC encountered an invalid internal entry index during retrace function execution.';
+16755   : sNcError := '16755 NC programming: Invalid G code. The default G code contains a wrong expression or syntax error.';
+16756   : sNcError := '16756 NC programming: Error opening the G code file. Error occurred while opening the default G code file.';
+
+16977 : sNcError := 'Function is not supported. An NC function has been activated that is currently not released for use, or which is not even implemented.';
+16978 : sNcError := 'State of state machine invalid (internal error). The state for one of the internal state machines is invalid.';
+16979 : sNcError := 'PLC reference cam became free too soon. The referencing cam must remain occupied until the axis starts back down from the cam.';
+16980 : sNcError := 'Distance monitoring between activation of the hardware latch and appearance of the I/O sync pulse.';
+16981 : sNcError := 'No memory available. The dynamic memory allocation for the setpoint generator, the SVB table or the SAF table has failed.';
+16982 : sNcError := 'The table slave axis has no active table. None of the tables is designated as active.';
+16983 : sNcError := 'Function not allowed. The requested function or task is not logically allowed.';
+16984 : sNcError := 'Stopping compensation not allowed. It is not possible to stop the compensation, since it is already in the stopping phase.';
+16985 : sNcError := 'Slave table is being used. The slave table cannot be activated, because it is currently being used.';
+16986 : sNcError := 'Master or slave axis is processing a task while coupling is requested.';
+16987 : sNcError := 'Slave (start) parameter is incorrect. One of the slave start/coupling parameters is not allowed.';
+16988 : sNcError := 'Slave type is wrong. The slave type does not match the (SVB) start type.';
+16989 : sNcError := 'Axis stop is already active. The axis stop/Estop is not initiated, because the stop is already active.';
+16990 : sNcError := 'Maximum number of tables per slave generator reached.';
+16991 : sNcError := 'The scaling mode is not allowed. The used scaling is invalid in this context.';
+16992 : sNcError := 'Controller enable is not present.';
+16993 : sNcError := 'Table not found. No table exists with the prescribed ID or the table ID is not unique.';
+16994 : sNcError := 'Incorrect table type. The table referred to in the function is of the incorrect type.';
+16995 : sNcError := 'Single step mode error.';
+16996 : sNcError := 'Group task unknown (asynchronous table entry).';
+16997 : sNcError := 'Group function unknown (synchronous function).';
+16998 : sNcError := 'Group task for slave not allowed.';
+16999 : sNcError := 'Group function for slave not allowed.';
+17000 : sNcError := 'NCI setpoint generator is inactive.';
+17001 : sNcError := 'Start position = target position. Invalid position parameters.';
+17002 : sNcError := 'Parameters of the delay-generator are invalid.';
+17003 : sNcError := 'External parameters of the compensation are invalid.';
+17004 : sNcError := 'Invalid override type.';
+17005 : sNcError := 'Activation position under/overrun.';
+17006 : sNcError := 'Activation impossible: Master at standstill.';
+17007 : sNcError := 'Activation mode not possible.';
+17008 : sNcError := 'Start parameter of the compensation invalid.';
+17009 : sNcError := 'Velocity overshoot is negative.';
+17010 : sNcError := 'Start parameter of the compensation invalid.';
+17011 : sNcError := 'Target position under/overrun (internal error).';
+17012 : sNcError := 'Target position will be under/overrun (internal error).';
+17013 : sNcError := 'Group parameter is invalid.';
+17014 : sNcError := 'Group error at the start of the setpoint generation.';
+17015 : sNcError := 'Dynamic parameters not permitted (internal error).';
+17017 : sNcError := 'New target position is invalid or cannot be reached.';
+17018 : sNcError := 'New travel velocity or final velocity is invalid.';
+17019 : sNcError := 'New final velocity or new target position is invalid.';
+17020 : sNcError := 'New travel velocity is invalid.';
+17021 : sNcError := 'Internal start mode is invalid.';
+17022 : sNcError := 'A requested movement command could not be realized (BISECTION).';
+17023 : sNcError := 'The new target position either has been overrun or will be overrun.';
+17024 : sNcError := 'Group not ready / group not ready for new task.';
+17025 : sNcError := 'Parameters of the oriented stop are not allowed.';
+17026 : sNcError := 'The modulo target position of the modulo-start is invalid.';
+17027 : sNcError := 'The activation mode is not allowed.';
+17028 : sNcError := 'The parameterized jerk rate is not allowed.';
+17029 : sNcError := 'The parameterized acceleration or deceleration is not permitted.';
+17030 : sNcError := 'The parameterized velocity is not permitted.';
+17031 : sNcError := 'Activation cannot be executed due to a pending activation.';
+17032 : sNcError := 'Illegal combination of different cycle times within an axis group.';
+17033 : sNcError := 'Invalid axis motion reversal.';
+17034 : sNcError := 'Illegal command timing, because another instruction with future activation position is active.';
+17035 : sNcError := 'Stop-calculation routine (internal error).';
+17036 : sNcError := 'A command with activation position cannot fully be performed because the remaining path is too short.';
+17037 : sNcError := 'Invalid decouple type.';
+17038 : sNcError := 'Illegal target velocity when decoupling a slave axis.';
+17039 : sNcError := 'Activation new dynamic parameters cannot be performed.';
+17040 : sNcError := 'A command with activation position cannot be executed because the axis is already in the brake phase.';
+17041 : sNcError := 'Jerk scaling of the decouple routine when decoupling a slave axis cannot find a valid solution.';
+17042 : sNcError := 'Command cannot be executed because the command buffer is full.';
+17043 : sNcError := 'Command is rejected due to an internal error in the Look Ahead (internal error).';
+17044 : sNcError := 'Command is rejected because the new travel velocity cannot be implemented.';
+17045 : sNcError := 'Successive commands have the same end position.';
+17046 : sNcError := 'Logical direction of travel of the axis is inconsistent with the parameterized direction of travel of the buffer command.';
+17047 : sNcError := 'Command is rejected because the remaining distance in the current segment is too short.';
+17050 : sNcError := 'Restart failed.';
+17051 : sNcError := 'Group error for invalid start parameters.';
+17052 : sNcError := 'PLC referencing cam is not found.';
+17053 : sNcError := 'PLC referencing cam has not been released again.';
+17054 : sNcError := 'I/O sync pulse was not found (only when using hardware latch).';
+17055 : sNcError := 'The used buffer mode is unknown or not supported in this context.';
+17056 : sNcError := 'Group/axis consequential error.';
+17057 : sNcError := 'Velocity reduction factor for C0/C1 transition is not allowed.';
+
+
+// Axis Errors -----------------------------------------------------------------------------------------------------
+
+
+17152   : sNcError := '17152 Parameter: Axis ID not allowed. The axis ID value is not allowed, e.g. because it has already been assigned, is out of the valid range [1 ... 255], or does not exist in the current configuration.';
+17153   : sNcError := '17153 Parameter: Axis type not allowed. The axis type value is not allowed as it is not defined. Valid types: 1 (servo), 2 (fast/creep), 3 (stepper motor).';
+17158   : sNcError := '17158 Parameter: Slow manual velocity not allowed. The slow manual velocity value is not allowed. Valid range: [0.0, 10000.0] e.g., m/min.';
+17159   : sNcError := '17159 Parameter: Fast manual velocity not allowed. The fast manual velocity value is not allowed. Valid range: [0.0, 10000.0] e.g., m/min.';
+17160   : sNcError := '17160 Parameter: Rapid traverse velocity not allowed. The rapid traverse velocity value is not allowed. Valid range: [0.0, 10000.0] e.g., m/min.';
+17161   : sNcError := '17161 Parameter: Axis acceleration not allowed. The axis acceleration value is not allowed. Valid range: [0.0, 1000000.0] e.g., m/s².';
+17162   : sNcError := '17162 Parameter: Axis deceleration not allowed. The axis deceleration value is not allowed. Valid range: [0.0, 1000000.0] e.g., m/s².';
+17163   : sNcError := '17163 Parameter: Axis jerk not allowed. The axis jerk value is not allowed. Valid range: [0.0, 1000000.0] e.g., m/s³.';
+17164   : sNcError := '17164 Parameter: Delay time between position and velocity not allowed. The delay time for dead time compensation is not allowed. Valid range: [0, 0.1] s.';
+17165   : sNcError := '17165 Parameter: Override type not allowed. The velocity override type value is not allowed as it is not defined. Valid types: 1 (internal), 2 (external).';
+17166   : sNcError := '17166 Parameter: NCI: Velo-Jump-Factor not allowed. The velo-jump-factor value is not allowed for TwinCAT NCI. Valid range: [0, 1000000].';
+17167   : sNcError := '17167 Parameter: NCI: Tolerance sphere radius invalid. The tolerance sphere size value for auxiliary axes is invalid. Valid range: [0, 1000] e.g., mm.';
+17168   : sNcError := '17168 Parameter: NCI: Max deviation for auxiliary axis invalid. The max allowed deviation value for auxiliary axes is invalid. Valid range: [0, 10000] e.g., mm.';
+17170   : sNcError := '17170 Parameter: Referencing velocity in direction of cam not allowed. The referencing velocity towards the cam is not allowed. Valid range: [0.0, 10000.0] e.g., m/min.';
+17171   : sNcError := '17171 Parameter: Referencing velocity in sync direction not allowed. The referencing velocity towards the sync pulse is not allowed. Valid range: [0.0, 10000.0] e.g., m/min.';
+17172   : sNcError := '17172 Parameter: Pulse width in positive direction not allowed. The pulse width in the positive direction is not allowed for pulsed operation. Valid range: [0.0, 1000000.0] e.g., mm.';
+17173   : sNcError := '17173 Parameter: Pulse width in negative direction not allowed. The pulse width in the negative direction is not allowed for pulsed operation. Valid range: [0.0, 1000000.0] e.g., mm.';
+17174   : sNcError := '17174 Parameter: Pulse time in positive direction not allowed. The pulse time in the positive direction is not allowed. Valid range: [0.0, 600.0] s.';
+17175   : sNcError := '17175 Parameter: Pulse time in negative direction not allowed. The pulse time in the negative direction is not allowed. Valid range: [0.0, 600.0] s.';
+17176   : sNcError := '17176 Parameter: Creep distance in positive direction not allowed. The creep distance in the positive direction is not allowed. Valid range: [0.0, 100000.0] e.g., mm.';
+17177   : sNcError := '17177 Parameter: Creep distance in negative direction not allowed. The creep distance in the negative direction is not allowed. Valid range: [0.0, 100000.0] e.g., mm.';
+17178   : sNcError := '17178 Parameter: Braking distance in positive direction not allowed. The braking distance in the positive direction is not allowed. Valid range: [0.0, 100000.0] e.g., mm.';
+17179   : sNcError := '17179 Parameter: Braking distance in negative direction not allowed. The braking distance in the negative direction is not allowed. Valid range: [0.0, 100000.0] e.g., mm.';
+17180   : sNcError := '17180 Parameter: Deceleration time in positive direction not allowed. The deceleration time in the positive direction is not allowed. Valid range: [0.0, 60.0] s.';
+17181   : sNcError := '17181 Parameter: Deceleration time in negative direction not allowed. The deceleration time in the negative direction is not allowed. Valid range: [0.0, 60.0] s.';
+17182   : sNcError := '17182 Parameter: Switching time from rapid to slow traverse not allowed. The switching time from rapid to slow traverse is not allowed. Valid range: [0.0, 60.0] s.';
+17183   : sNcError := '17183 Parameter: Creep distance for stop not allowed. The creep distance for an explicit stop is not allowed. Valid range: [0.0, 100000.0] e.g., mm.';
+17184   : sNcError := '17184 Parameter: Motion monitoring not allowed. The motion monitoring activation value is not allowed. Valid range: [0, 1].';
+17185   : sNcError := '17185 Parameter: Position window monitoring not allowed. The position window monitoring activation value is not allowed. Valid range: [0, 1].';
+17186   : sNcError := '17186 Parameter: Target window monitoring not allowed. The target window monitoring activation value is not allowed. Valid range: [0, 1].';
+17187   : sNcError := '17187 Parameter: Loop not allowed. The loop movement activation value is not allowed. Valid range: [0, 1].';
+17188   : sNcError := '17188 Parameter: Motion monitoring time not allowed. The motion monitoring time value is not allowed. Valid range: [0.0, 600.0] s.';
+17189   : sNcError := '17189 Parameter: Target window range not allowed. The target window value is not allowed. Valid range: [0.0, 10000.0] e.g., mm.';
+17190   : sNcError := '17190 Parameter: Position window range not allowed. The position window value is not allowed. Valid range: [0.0, 10000.0] e.g., mm.';
+17191   : sNcError := '17191 Parameter: Position window monitoring time not allowed. The position window monitoring time value is not allowed. Valid range: [0.0, 600.0] s.';
+17192   : sNcError := '17192 Parameter: Looping distance not allowed. The looping distance value is not allowed. Valid range: [0.0, 10000.0] e.g., mm.';
+17193   : sNcError := '17193 Parameter: Axis cycle time not allowed. The axis cycle time value is not allowed. Valid range: [0.001, 0.1] s.';
+17194   : sNcError := '17194 Parameter: Operation mode stepper motor not allowed. The stepper motor operating mode value is not allowed. Valid range: [1, 2].';
+17195   : sNcError := '17195 Parameter: Displacement per stepper motor step not allowed. The displacement per step value for the stepper motor is not allowed. Valid range: [0.000001, 1000.0] e.g., mm/STEP.';
+17196   : sNcError := '17196 Parameter: Minimum velocity for stepper motor set value profile not allowed. The minimum velocity for the stepper motor velocity profile is not allowed. Valid range: [0.0, 1000.0] e.g., m/min.';
+17197   : sNcError := '17197 Parameter: Stepper motor stages for one velocity level not allowed. The number of steps for each velocity level in the setpoint generation is not allowed. Valid range: [0, 100].';
+17198   : sNcError := '17198 Parameter: DWORD for the interpretation of the axis units not allowed. The flags value for interpreting position and velocity units is not allowed. Valid range: [0, 0xFFFFFFFF].';
+17199   : sNcError := '17199 Parameter: Maximum velocity not allowed. The maximum permitted velocity value is not allowed. Valid range: [0.0, 10000.0] e.g., m/min.';
+17200   : sNcError := '17200 Parameter: Motion monitoring window not allowed. The motion monitoring window value is not allowed. Valid range: [0.0, 10000.0] e.g., mm.';
+17201   : sNcError := '17201 Parameter: PEH time monitoring not allowed. The PEH time monitoring activation value is not allowed (PEH: positioning end and halt). Valid range: [0, 1].';
+17202   : sNcError := '17202 Parameter: PEH monitoring time not allowed. The PEH monitoring time (timeout) value is not allowed (PEH: positioning end and halt). Valid range: [0.0, 600.0] s.';
+17203   : sNcError := '17203 Parameter: Brake Release Delay is invalid. The brake release delay parameter for a rapid/slow traverse axis is invalid. Valid range: [0.0, 60.0] s.';
+17204   : sNcError := '17204 Parameter: NC Data Persistence is invalid. The boolean parameter NC Data Persistence of an axis is invalid. Valid range: [0, 1].';
+17205   : sNcError := '17205 Parameter: Error reaction mode is invalid. The error reaction mode parameter of the axis is invalid (instantaneous, delayed). Valid range: [0, 1].';
+17206   : sNcError := '17206 Parameter: Error reaction delay is invalid. The error reaction delay parameter of the axis is invalid. Valid range: [0.0, 1000.0] s.';
+17207   : sNcError := '17207 Parameter: Use actual values in deactivated state is invalid. The parameter "Use actual values in deactivated state" is invalid. Valid range: [0, 1].';
+17208   : sNcError := '17208 Parameter: Allow motion commands for slave axes is invalid. The boolean parameter "Allow motion commands for slave axes" is invalid. Valid range: [0, 1].';
+17209   : sNcError := '17209 Parameter: Allow motion commands for axis in external setpoint generation is invalid. The boolean parameter "Allow motion commands for axis in external setpoint generation" is invalid. Valid range: [0, 1].';
+17210   : sNcError := '17210 Parameter: Fading Acceleration is invalid. The "Fading Acceleration" parameter for the fading profile from SET to ACTUAL values is invalid. Valid range: [0; 0.01 .. 1.0e+20] e.g., mm/s².';
+17211   : sNcError := '17211 Parameter: Fast Axis Stop signal type not allowed. The Signal Type value of the "Fast Axis Stop" is not allowed. Valid range: [0...5].';
+17212   : sNcError := '17212 Parameter: ADS index offset not allowed. The "ADS offset (axis state)" value for user-defined parameter named "UserData" in AxisRef is invalid.';
+17216   : sNcError := '17216 Initialization: Axis initialization. The axis has not been fully initialized (I/O, axis, reset).';
+17217   : sNcError := '17217 Address: Group address. The axis does not have a group or the group address has not been initialized.';
+17218   : sNcError := '17218 Address: Encoder address. The axis does not have an encoder or the encoder address has not been initialized.';
+17219   : sNcError := '17219 Address: Controller address. The axis does not have a controller or the controller address has not been initialized.';
+17220   : sNcError := '17220 Address: Drive address. The axis does not have a drive or the drive address has not been initialized.';
+17221   : sNcError := '17221 Address: Axis interface PLC to NC address. The axis has no axis interface from the PLC to the NC (PlcToNc) or the axis interface address has not been initialized.';
+
+
+// Drive Errors -----------------------------------------------------------------------------------------------------
+
+
+17920   : sNcError := '17920 Parameter: Drive ID not allowed. The drive ID value is invalid because it is either already assigned, less than or equal to zero, or exceeds 255. Valid range: [1 ... 255].';
+17921   : sNcError := '17921 Parameter: Drive type not allowed. The drive type value is invalid as it is not defined. Valid range: [1, 20].';
+17922   : sNcError := '17922 Parameter: Drive operation mode not allowed. The drive operation mode value is invalid. Valid range: [1].';
+17923   : sNcError := '17923 Parameter: Motor polarity not allowed. The motor polarity flag is invalid. Valid values: 0 (Positive), 1 (Negative).';
+17924   : sNcError := '17924 Parameter: Drift compensation/velocity offset (DAC offset) invalid. Valid range: [-100.0, 100.0] e.g., m/min.';
+17925   : sNcError := '17925 Parameter: Reference velocity (velocity pre-control) invalid. Valid range: [0.0, 10000.0] e.g., m/min.';
+17926   : sNcError := '17926 Parameter: Reference output in percent invalid. The value usually corresponds to a voltage of 10.0 V. Valid range: [0.0, 5.0] %.';
+17927   : sNcError := '17927 Parameter: Quadrant compensation factor not allowed. The value is invalid. Valid range: [0.0, 100.0].';
+17928   : sNcError := '17928 Parameter: Velocity reference point in percent invalid. The value 1.0 corresponds to 100 percent. Valid range: [0.01, 1.0] %.';
+17929   : sNcError := '17929 Parameter: Output reference point invalid. The value 1.0 corresponds to 100 percent. Valid range: [0.01, 1.0] %.';
+17930   : sNcError := '17930 Parameter: Min or max output limits (output limitation) invalid. The min limit is initially set to –1.0 (-100%) and the max limit to 1.0 (100%). Valid range: [-1.0, 1.0] %.';
+17931   : sNcError := '17931 Parameter: Maximum value for output not allowed. The value for the max output digits of the drive is not allowed. Valid range: [0x000000FF .. 0xFFFFFFFF] INC or Digits.';
+17932   : sNcError := '17932 Parameter: Internal Drive Control Word not allowed. The internal Drive Control Word value for the NC is invalid. Valid range: [&gt;0].';
+17933   : sNcError := '17933 Parameter: Internal timer for RESET behavior Drive not allowed. The timer influencing NC Drive and IO Drive behavior is invalid. Valid range: [&gt;5] NC SEC cycles.';
+17934   : sNcError := '17934 Parameter: Master Motion Controller ID not allowed. This parameter is invalid for a slave NC Motion Controller. Valid range: [0 .. 255].';
+17935   : sNcError := '17935 Parameter: Drive torque output scaling not allowed. The value for Drive torque output scaling (rotary motor) or force output scaling (linear motor) is invalid. Valid range: [0, 1000000].';
+17936   : sNcError := '17936 Parameter: Drive velocity output scaling not allowed. The value is invalid. Valid range: [0, 1000000].';
+17937   : sNcError := '17937 Parameter: Profi Drive DSC proportional gain Kpc (controller) not allowed. The Profi Drive DSC position control gain (Kpc factor) value is invalid. Valid range: [0, 0xFFFFFF] 0.001 * 1/s.';
+17938   : sNcError := '17938 Parameter: Table ID not allowed. The table ID value is invalid. Valid range: [0, 255].';
+17939   : sNcError := '17939 Parameter: Table interpolation type not allowed. The table interpolation type value is invalid. Valid values: 0 (LINEAR), 2 (SPLINE).';
+17940   : sNcError := '17940 Parameter: Output offset in percent not allowed. The output offset in percent value is invalid. Valid range: [-1.0, 1.0] %.';
+17941   : sNcError := '17941 Parameter: Profi Drive DSC scaling for "Xerr" (controller) not allowed. The value is invalid. Valid range: [0, 1000000].';
+17942   : sNcError := '17942 Parameter: Drive acceleration output scaling not allowed. The value is invalid. Valid range: [0, 1000000].';
+17943   : sNcError := '17943 Parameter: Drive position output scaling not allowed. The value is invalid. Valid range: [0, 1000000].';
+17944   : sNcError := '17944 Parameter: Dead time compensation mode (Motion Controller) invalid. The dead time compensation mode is invalid (OFF, ON with velocity, ON with velocity and acceleration). Valid values: [0, 1, 2].';
+17945   : sNcError := '17945 Parameter: Control bits of dead time compensation (motion controller) invalid. The parameter is invalid. Valid range: [&gt;0].';
+17946   : sNcError := '17946 Parameter: Time shift of dead time compensation mode (motion controller) invalid. The time shift parameter in nanoseconds is invalid. Valid range: [-1.0E9 .. 1.0E9] ns.';
+17947   : sNcError := '17947 Parameter: Output delay velocity interface Motion Controller invalid. The optional output delay in the velocity interface is invalid. Valid range: [0.0 .. 0.1] s.';
+17948   : sNcError := '17948 Parameter: Drive filter type not allowed for command variable filter for the output position. The drive filter type value is invalid. Valid range: [0, 2].';
+17949   : sNcError := '17949 Parameter: Drive filter time not allowed for command variable filter for the output position. The drive filter time value is invalid. Valid range: [0.0, 1.0] s.';
+17950   : sNcError := '17950 Parameter: Drive filter order not allowed for command variable filter for the output position. The drive filter order value is invalid. Valid range: [0, 10].';
+17952   : sNcError := '17952 Parameter: Bit mask for stepper motor cycle not allowed. The bit mask value is invalid. Valid range: [0, 255].';
+17953   : sNcError := '17953 Parameter: Bit mask for stepper motor holding current not allowed. The holding current mask value is invalid. Valid range: [0, 255].';
+17954   : sNcError := '17954 Parameter: Scaling factor for actual torque (actual current) not allowed. The scaling factor value is invalid. Valid range: [0, 1E+30].';
+17955   : sNcError := '17955 Parameter: Filter time for actual torque not allowed. The filter time value for the actual torque (or current) is invalid. Valid range: [0.0, 60.0] s.';
+17956   : sNcError := '17956 Parameter: Filter time for the time derivative of the actual torque not allowed. The filter time value for the time derivative of the actual torque (or current) is invalid. Valid range: [0.0, 60.0] s.';
+17957   : sNcError := '17957 Parameter: Drive operation mode invalid. The drive operation mode parameter is invalid. Valid range: [0, &gt;=1].';
+17958   : sNcError := '17958 Monitoring: Motion Controller function not supported. The triggered Motion Controller functionality is not enabled or implemented.';
+17959   : sNcError := '17959 Function: DRIVEOPERATIONMODEBUSY. The drive operation mode activation failed because another object is using this interface.';
+17960   : sNcError := '17960 Monitoring: Drive operation mode changeover not configured. No drive operation mode changeover is configured or the desired mode is not found.';
+17961   : sNcError := '17961 Monitoring: Feedback drive operation mode changeover. The requested drive operation mode was not consistently reported back within the monitoring time.';
+17968   : sNcError := '17968 Monitoring: Overtemperature detected or reported in the drive or terminal.';
+17969   : sNcError := '17969 Monitoring: Undervoltage detected or reported in the drive or terminal.';
+17970   : sNcError := '17970 Monitoring: Wire break in phase A detected or reported in the drive or terminal.';
+17971   : sNcError := '17971 Monitoring: Wire break in phase B detected or reported in the drive or terminal.';
+17972   : sNcError := '17972 Monitoring: Overcurrent detected or reported in phase A in the drive or terminal.';
+17973   : sNcError := '17973 Monitoring: Overcurrent detected or reported in phase B in the drive or terminal.';
+17974   : sNcError := '17974 Monitoring: Torque overload (stall) detected or reported in the drive or terminal.';
+17984   : sNcError := '17984 Initialization: Drive initialization. Drive not initialized properly. Steps: 1. Initialization drive I/O, 2. Initialization drive, 3. Reset drive.';
+17985   : sNcError := '17985 Address: Axis address not initialized. The drive does not know its axis or the axis address is not initialized.';
+17986   : sNcError := '17986 Address: Address I/O input structure. The drive has no valid I/O input address in the process image.';
+17987   : sNcError := '17987 Address: Address I/O output structure. The drive has no valid I/O output address in the process image.';
+18000   : sNcError := '18000 Monitoring: Drive hardware not ready. The drive hardware is not ready for operation, possibly due to hardware error, start-up phase, or missing controller enable.';
+18001   : sNcError := '18001 Monitoring: Error in cyclic communication of the drive (Life Counter). Possible causes: interrupted fieldbus or drive in error state.';
+18002   : sNcError := '18002 Monitoring: Changing table ID with active controller enable not allowed. Changing the characteristic curve table ID is not allowed when controller enable is active.';
+18005   : sNcError := '18005 Monitoring: I/O data for more than "n" continuous NC cycles invalid. The axis detected invalid I/O data for more than "n" continuous NC cycles.';
+
+
+// Controller Errors -----------------------------------------------------------------------------------------------------
+
+
+17664   : sNcError := '17664 Parameter: Controller ID not allowed. The controller ID value is invalid, e.g., already assigned, less than or equal to zero, or exceeds 255. Valid range: [1 ... 255].';
+17665   : sNcError := '17665 Parameter: Controller type not allowed. The controller type value is invalid as it is not defined. Valid types: 1 (P-controller), 7 (Fast/creep), 8 (Stepper motor), 9 (Sercos).';
+17666   : sNcError := '17666 Parameter: Operation mode controller not allowed. The controller operating mode value is invalid. Valid range: [1].';
+17667   : sNcError := '17667 Parameter: Weighting of the velocity pre-control not allowed. The velocity pre-control weighting value is invalid. Valid range: [0.0 ... 1.0] %.';
+17668   : sNcError := '17668 Parameter: Lag error monitor (position) not allowed. The activation value for the lag error monitor is invalid. Valid range: [0, 1].';
+17669   : sNcError := '17669 Parameter: Lag monitoring (velocity) not allowed. The activation value for the lag error monitoring is invalid. Valid range: [0, 1].';
+17670   : sNcError := '17670 Parameter: Lag error window (position) not allowed. The maximum allowable lag error value is invalid. Valid range: [0.0, 10000.0] e.g., mm.';
+17671   : sNcError := '17671 Parameter: Lag error filter time (position) not allowed. The lag error filter time value is invalid. Valid range: [0.0, 600.0] s.';
+17672   : sNcError := '17672 Parameter: Lag error window (velocity) not allowed. The lag error window (velocity) value is invalid. Valid range: [0.0, 10000.0] e.g., m/min.';
+17673   : sNcError := '17673 Parameter: Lag error filter time (velocity) not allowed. The lag error filter time value is invalid. Valid range: [0.0, 600.0] s.';
+17674   : sNcError := '17674 Parameter: Controller output limitation not allowed. The output limitation value of the controller is invalid. Valid range: [0.0, 1.0] %.';
+17680   : sNcError := '17680 Parameter: Proportional gain Kv or Kp (controller) not allowed. The proportional gain (Kv or Kp factor) value is invalid. Valid range: [0.0, 10000.0] e.g., mm/s/mm.';
+17681   : sNcError := '17681 Parameter: Integral action time Tn (controller) not allowed. The integral action time value is invalid (I part of the PID T1 controller). Valid range: [0.0, 60.0] s.';
+17682   : sNcError := '17682 Parameter: Rate time Tv (controller) not allowed. The derivative action time value is invalid (D part of the PID T1 controller). Valid range: [0.0, 60.0] s.';
+17683   : sNcError := '17683 Parameter: Damping time Td (controller) not allowed. The damping time value is invalid (D part of the PID T1 controller). Valid range: [0.0, 60.0] s.';
+17684   : sNcError := '17684 Function: Activation of the automatic offset calibration not allowed. Activation of automatic offset calibration is only possible for certain controllers (without I component).';
+17685   : sNcError := '17685 Parameter: Additional proportional gain Kv or Kp (controller) not allowed. The second term of the proportional gain value is invalid. Valid range: [0.0, 10000.0] e.g., mm/s/mm.';
+17686   : sNcError := '17686 Parameter: Reference velocity for additional proportional gain Kv or Kp (controller) not allowed. The reference velocity percentage value is invalid. Standard: 0.5 (50%). Valid range: [0.0 ... 1.0] %.';
+17687   : sNcError := '17687 Parameter: Proportional gain Pa (proportion) not allowed. The proportional gain (Pa factor) value is invalid. Valid range: [0.0, 1000000.0] s.';
+17688   : sNcError := '17688 Parameter: Proportional gain Kv (controller) not allowed. The proportional gain (Kv factor) value is invalid. Valid range: [0.0, 10000.0].';
+17689   : sNcError := '17689 Parameter: Integral action time Tn (controller) not allowed. The integral action time value is invalid (I part of the PID T1 controller). Valid range: [0.0, 60.0] s.';
+17690   : sNcError := '17690 Parameter: Reserved. Reserved, currently not used.';
+17691   : sNcError := '17691 Parameter: Reserved. Reserved, currently not used.';
+17692   : sNcError := '17692 Parameter: Velocity filter time not allowed. The velocity filter time in seconds (P-T1 filter) is invalid. Valid range: [0.0, 60.0] s.';
+17693   : sNcError := '17693 Parameter: Dead range not allowed. The dead range (neutral zone) value of the position or velocity error is invalid. Valid range: [0.0, 10000.0] mm or mm/s.';
+17695   : sNcError := '17695 Parameter: Proportional gain Kcp not allowed. The proportional gain Kcp parameter for slave coupling difference control is invalid. Valid range: [0.0, 10000.0] e.g., mm²/mm.';
+17696   : sNcError := '17696 Parameter: Rate time Tv (controller) not allowed. The derivative action time value is invalid (D part of the PID T1 controller). Valid range: [0.0, 60.0] s.';
+17697   : sNcError := '17697 Parameter: Damping time Td (controller) not allowed. The damping time value is invalid (D part of the PID T1 controller). Valid range: [0.0, 60.0] s.';
+17698   : sNcError := '17698 Parameter: Limitation of the I part not allowed. The limitation parameter for the I-part of a PI- or PID-controller is invalid. Valid range: [0.0 .. 1.0] %.';
+17699   : sNcError := '17699 Parameter: Limitation of the D part not allowed. The limitation parameter for the D-part of a PI- or PID-controller is invalid. Valid range: [0.0 .. 1.0] %.';
+17700   : sNcError := '17700 Parameter: Deactivation of the I part during travel not allowed. The boolean parameter for switching off the I-part during active positioning is invalid. Valid range: [0, 1].';
+17701   : sNcError := '17701 Parameter: Filter time for P-T2 filter not allowed. The filter time T0 for the P-T2 element is invalid. Valid range: [0.0, 60.0] s.';
+17702   : sNcError := '17702 Parameter: Velocity observer mode not allowed. The parameterized mode (0=OFF, 1=LUENBERGER) for the velocity observer is invalid. Valid range: [0, 1].';
+17703   : sNcError := '17703 Parameter: Motor torque constant Kt or Kf not allowed. The motor torque constant Kt (rotary) or Kf (linear) parameter for the velocity observer is invalid. Valid range: [0.0 .. 100000.0] Nm/A or N/A.';
+17704   : sNcError := '17704 Parameter: Motor moment of inertia JM not allowed. The motor moment of inertia JM parameter for the velocity observer is invalid. Valid range: [0.0001 .. 100000.0] kg cm².';
+17705   : sNcError := '17705 Parameter: Bandwidth f0 not allowed. The bandwidth f0 parameter for the velocity observer is invalid. Valid range: [0.0 .. 10000.0] Hz.';
+17706   : sNcError := '17706 Parameter: Correction factor kc not allowed. The correction factor kc for the velocity observer is invalid. Valid range: [0.0 .. 100.0] s.';
+17707   : sNcError := '17707 Parameter: Time constant T for 1st order filter not allowed. The time constant T for the 1st order velocity filter is invalid. Valid range: [0.0 .. 100.0] s.';
+17708   : sNcError := '17708 Parameter: Amplitude damping d for 2nd order filter not allowed. The amplitude damping dHP or dTP for the 2nd order filter is invalid. Valid range: [0.2 .. 10.0].';
+17709   : sNcError := '17709 Parameter: Frequency fHP or fTP for 2nd order filter not allowed. The frequency fHP or fTP for the 2nd order filter is invalid. Valid range: [0.0 .. 10000.0] Hz.';
+17728   : sNcError := '17728 Initialization: Controller initialization. The controller has not been initialized properly. Steps: 1. Initialization of controller, 2. Reset of controller.';
+17729   : sNcError := '17729 Address: Axis address not initialized. The controller does not know its axis or the axis address is not initialized.';
+17730   : sNcError := '17730 Address: Drive address not initialized. The controller does not know its drive or the drive address is not initialized.';
+17744   : sNcError := '17744 Monitoring: Lag error monitor (position). The lag error exceeded the window and lasted longer than the filter time during lag error monitor activation.';
+17745   : sNcError := '17745 Monitoring: Lag monitoring (velocity). The velocity lag error exceeded the window and lasted longer than the filter time during lag error monitor activation.';
+17824   : sNcError := '17824 Monitoring: Internal error. CONTROLERR_RANGE_AREA_ASIDE.';
+17825   : sNcError := '17825 Monitoring: Internal error. CONTROLERR_RANGE_AREA_BSIDE.';
+17826   : sNcError := '17826 Monitoring: Internal error. CONTROLERR_RANGE_QNENN.';
+17827   : sNcError := '17827 Monitoring: Internal error. CONTROLERR_RANGE_PNENN.';
+17828   : sNcError := '17828 Monitoring: Internal error. CONTROLERR_RANGE_AXISIDPRESP0.';
+
+
+// Encoder Errors -----------------------------------------------------------------------------------------------------
+
+
+17408   : sNcError := '17408 Parameter: Encoder ID not allowed. The encoder ID value is invalid because it is already assigned, less than or equal to zero, or exceeds 255. Valid range: [1 ... 255].';
+17409   : sNcError := '17409 Parameter: Encoder type not allowed. The encoder type value is invalid as it is not defined. Valid types: 1 (Simulation), 2 (M3000), 3 (M31x0), 4 (KL5101), 5 (KL5001), 6 (KL5051).';
+17410   : sNcError := '17410 Parameter: Encoder mode not allowed. The encoder operation mode value is invalid. Valid modes: 1 (Position), 2 (Position and velocity).';
+17411   : sNcError := '17411 Parameter: Encoder count direction not allowed. The encoder counting direction flag is invalid. Valid values: 0 (Positive), 1 (Negative).';
+17412   : sNcError := '17412 Initialization: Calibration state not allowed. The calibration state flag is invalid. Valid values: 0 (Not referenced), 1 (Referenced).';
+17413   : sNcError := '17413 Parameter: Encoder increments per revolution not allowed. The number of encoder increments per revolution is invalid. Valid range: [255, 0xFFFFFFFF] INC.';
+17414   : sNcError := '17414 Parameter: Scaling factor not allowed. The scaling factor for converting encoder increments to physical units is invalid. Valid range: [0.000001, 100.0] e.g., mm/INC.';
+17415   : sNcError := '17415 Parameter: Position offset not allowed. The position offset value is invalid. Valid range: [-1000000.0, 1000000.0] e.g., mm.';
+17416   : sNcError := '17416 Parameter: Modulo factor not allowed. The modulo factor value is invalid. Valid range: [1.0, 1.0E+9] e.g., mm or degrees.';
+17417   : sNcError := '17417 Parameter: Position filter time not allowed. The actual position filter time value is invalid (P-T1 filter). Valid range: [0.0, 60.0] s.';
+17418   : sNcError := '17418 Parameter: Velocity filter time not allowed. The actual velocity filter time value is invalid (P-T1 filter). Valid range: [0.0, 60.0] s.';
+17419   : sNcError := '17419 Parameter: Acceleration filter time not allowed. The actual acceleration filter time value is invalid (P-T1 filter). Valid range: [0.0, 60.0] s.';
+17420   : sNcError := '17420 Initialization: Cycle time not allowed (internal error). The SAF cycle time value for actual values calculation is invalid.';
+17421   : sNcError := '17421 Initialization: Setting of selected units is invalid. Settings for modulo position, velocity, etc., lead to an error.';
+17422   : sNcError := '17422 Parameter: Position correction/measurement system error correction not allowed. The activation value for actual position correction is invalid. Valid range: [0, 1].';
+17423   : sNcError := '17423 Parameter: Position correction filter time not allowed. The filter time value for actual position correction is invalid (P-T1 filter). Valid range: [0.0, 60.0] s.';
+17424   : sNcError := '17424 Parameter: Search direction for referencing cam inverted. The search direction value for the referencing cam is invalid. Valid values: 0 (Positive), 1 (Negative).';
+17425   : sNcError := '17425 Parameter: Search direction for sync pulse inverted. The search direction value for the sync pulse is invalid. Valid values: 0 (Positive), 1 (Negative).';
+17426   : sNcError := '17426 Parameter: Reference position not allowed. The reference position value in a referencing procedure is invalid. Valid range: [-1000000.0, 1000000.0] e.g., mm.';
+17427   : sNcError := '17427 Parameter: Distance monitoring between hardware latch activation and sync pulse occurrence not allowed. The distance monitoring flag is invalid. Valid values: 0 (Passive), 1 (Active).';
+17428   : sNcError := '17428 Parameter: Minimum gap between hardware latch activation and sync pulse not allowed. The minimum gap value between hardware latch activation and sync pulse is invalid. Valid range: [0, 65536] INC.';
+17429   : sNcError := '17429 Parameter: External sync pulse not allowed. The activation/deactivation value for the external sync pulse is invalid. Valid values: 0 (Passive), 1 (Active).';
+17430   : sNcError := '17430 Parameter: Scaling of the noise rate not allowed. The scaling value for the synthetic noise rate is invalid. Valid range: [0, 1000000].';
+17431   : sNcError := '17431 Parameter: Tolerance window for modulo-start not allowed. The tolerance window value for the modulo-axis-start is invalid. Valid range: [0.0, 180.0] e.g., mm or degrees.';
+17432   : sNcError := '17432 Parameter: Encoder referencing mode not allowed. The encoder referencing mode value is invalid or unsupported. Valid range: [0, 5].';
+17433   : sNcError := '17433 Parameter: Encoder evaluation direction not allowed. The encoder evaluation direction value is invalid. Valid range: [0, 3].';
+17434   : sNcError := '17434 Parameter: Encoder absolute dimensioning system not allowed. The encoder reference system value is invalid. Valid values: 0 (INCREMENTAL), 1 (ABSOLUTE), 2 (ABSOLUTE+MODULO).';
+17435   : sNcError := '17435 Parameter: Encoder position initialization mode not allowed. The encoder position initialization mode value at TC system startup is invalid. Valid range: [0, 1].';
+17436   : sNcError := '17436 Parameter: Encoder sign interpretation (UNSIGNED/SIGNED) not allowed. The encoder sign interpretation value is invalid. Valid values: 0 (Default), 1 (UNSIGNED), 2 (SIGNED).';
+17437   : sNcError := '17437 Parameter: Homing Sensor Source not allowed. The Encoder Homing Sensor Source value is invalid or unsupported. Valid range: [0, 16].';
+17440   : sNcError := '17440 Parameter: Software end position monitoring minimum not allowed. The activation value for software end position monitoring minimum is invalid. Valid range: [0, 1].';
+17441   : sNcError := '17441 Parameter: Software end position monitoring maximum not allowed. The activation value for software end position monitoring maximum is invalid. Valid range: [0, 1].';
+17442   : sNcError := '17442 Function: Actual value setting outside value range. The "Set actual value" function cannot be executed as the new position is outside the intended value range. Valid range: [-1.0E10, 1.0E10] e.g., mm.';
+17443   : sNcError := '17443 Parameter: Software end position minimum not allowed. The software end position minimum value is invalid. Valid range: [-1000000000.0, 1000000000.0] e.g., mm.';
+17444   : sNcError := '17444 Parameter: Software end position maximum not allowed. The software end position maximum value is invalid. Valid range: [-1000000000.0, 1000000000.0] e.g., mm.';
+17445   : sNcError := '17445 Parameter: Filter mask for encoder raw value not allowed. The filter mask value for the encoder raw value in increments is invalid. Valid range: [0x0, 0xFFFFFFFF].';
+17446   : sNcError := '17446 Parameter: Reference mask for encoder raw value not allowed. The reference mask value for the encoder raw value in increments is invalid. Valid range: [0x0000000F, 0xFFFFFFFF].';
+17447   : sNcError := '17447 Parameter: Dead time compensation mode (encoder) invalid. The dead time compensation mode on the NC encoder is invalid. Valid values: [0, 1, 2].';
+17448   : sNcError := '17448 Parameter: Control bits of dead time compensation (encoder) invalid. The control bits value for dead time compensation at the encoder is invalid. Valid range: [&gt;0].';
+17449   : sNcError := '17449 Parameter: Time shift of dead time compensation mode (encoder) invalid. The time shift parameter for dead time compensation at the encoder is invalid. Valid range: [-1.0E9 .. 1.0E9] ns.';
+17456   : sNcError := '17456 Function: Hardware latch activation (encoder). The encoder hardware latch activation was initiated by referencing. If already active and latch value not valid, another call is refused.';
+17457   : sNcError := '17457 Function: Activation of external hardware latch/touch probe function (encoder). External hardware latch activation is invalid if already active without valid latch value.';
+17458   : sNcError := '17458 Function: External hardware latch activation (encoder). Referencing procedure with valid latch value already active.';
+17459   : sNcError := '17459 Function: Activation of external hardware latch/touch probe function (encoder). Function activated before and not finished, renewed activation not allowed.';
+17460   : sNcError := '17460 Monitoring: Encoder function not supported. An unsupported or not released encoder function has been activated.';
+17461   : sNcError := '17461 Monitoring: Encoder function already active. Encoder function cannot be activated as it is already active.';
+17472   : sNcError := '17472 Initialization: Encoder initialization not completed. Steps: 1. Initialization of axis I/O, 2. Initialization of axis, 3. Reset axis.';
+17473   : sNcError := '17473 Address: Axis address not initialized. The encoder does not know its axis or the axis address is not initialized.';
+17474   : sNcError := '17474 Address: Address I/O input structure invalid. The drive has no valid I/O input address in the process image.';
+17475   : sNcError := '17475 Address: Address I/O output structure invalid. The encoder has no valid I/O output address in the process image.';
+17488   : sNcError := '17488 Monitoring: Encoder counter underflow detected.';
+17489   : sNcError := '17489 Monitoring: Encoder counter overflow detected.';
+17504   : sNcError := '17504 Monitoring: Minimum software position limit (axis start). Axis start below the minimum software position limit detected.';
+17505   : sNcError := '17505 Monitoring: Maximum software position limit (axis start). Axis start above the maximum software position limit detected.';
+17506   : sNcError := '17506 Monitoring: Minimum software position limit (positioning process). Actual position fell below the minimum software position limit.';
+17507   : sNcError := '17507 Monitoring: Maximum software position limit (positioning process). Actual position exceeded the maximum software position limit.';
+17508   : sNcError := '17508 Monitoring: Encoder hardware error reported by drive or encoder system.';
+17509   : sNcError := '17509 Monitoring: Position initialization error at system startup. Actual position outside min/max end positions for all three initialization attempts.';
+17510   : sNcError := '17510 Monitoring: Invalid I/O data for more than "n" NC cycles (encoder). Invalid encoder I/O data detected for more than "n" continuous NC cycles.';
+17511   : sNcError := '17511 Monitoring: Invalid actual position (encoder). I/O device returns an invalid actual position.';
+17512   : sNcError := '17512 Monitoring: Invalid I/O input data (error type 1). Cyclic I/O input counter error detected (data not updated for 3 NC-SAF cycles).';
+17513   : sNcError := '17513 Monitoring: Invalid I/O input data (error type 2). Cyclic I/O input counter error detected (insufficient data quality based on 2-bit counter).';
+17520   : sNcError := '17520 Monitoring: SSI transformation faulty or not finished. SSI transformation of the FOX 50 module was faulty for some NC-cycles or did not finish.';
+17570   : sNcError := '17570 Monitoring: Internal error. ENCERR_ADDR_CONTROLLER.';
+17571   : sNcError := '17571 Monitoring: Internal error. ENCERR_INVALID_CONTROLLERTYPE.';
+
+
+// Futher Errors -----------------------------------------------------------------------------------------------------
+
+
+33056   : sNcError := '33056 Environment: Invalid configuration for Object (e.g. in TwinCAT 3 Engineering (XAE)).';
+33057   : sNcError := '33057 Environment: Invalid environment for Object (e.g. TcCom-Object\s Hierarchy or missing/faulty Objects).';
+33058   : sNcError := '33058 Environment: Incompatible Driver or Object.';
+33060   : sNcError := '33060 Function Block: Command execution does not terminate (e.g. MC_Reset does not signal DONE).';
+33072   : sNcError := '33072 Communication: Invalid ObjectID of Communication Target.';
+33073   : sNcError := '33073 Communication: Communication Target expects Call in different Context.';
+33074   : sNcError := '33074 Communication: Invalid State of Communication Target.';
+33076   : sNcError := '33076 Communication: Communication with Communication Target cannot be established.';
+33083   : sNcError := '33083 Parameter: Transition Mode is invalid.';
+33084   : sNcError := '33084 Parameter: BufferMode is invalid.';
+33085   : sNcError := '33085 Function Block: Only one active Instance of Function Block per Group is allowed.';
+33086   : sNcError := '33086 State: Command is not allowed in current group state.';
+33087   : sNcError := '33087 Function Block: Slave cannot synchronize. The slave cannot reach the SlaveSyncPosition with the given dynamics.';
+33088   : sNcError := '33088 Parameter: Invalid value for one or more dynamic parameters (Acceleration, Deceleration, Jerk).';
+33089   : sNcError := '33089 Parameter: IdentInGroup is invalid.';
+33090   : sNcError := '33090 Parameter: Number of axes in the group incompatible with axes convention.';
+33091   : sNcError := '33091 Communication: Function Block or Command not supported by Target.';
+33092   : sNcError := '33092 State: Command queue full. Cannot accept more commands until some are fully processed.';
+33093   : sNcError := '33093 Function Block: Mapping of Cyclic Interface between NC and PLC is missing (e.g. AXIS_REF, AXES_GROUP_REF, ...).';
+33094   : sNcError := '33094 Function Block: Invalid Velocity Value. The velocity was not set or the entered value is invalid.';
+33095   : sNcError := '33095 Parameter: Invalid Coordinate Dimension. The set coordinate interpretation does not meet requirements.';
+33096   : sNcError := '33096 Function Block: Invalid Input Value.';
+33097   : sNcError := '33097 Parameter: Unsupported Dynamics for selected Group Kernel.';
+33098   : sNcError := '33098 Parameter: Programmed position dimension incompatible with axes convention.';
+33099   : sNcError := '33099 Function Block: Path buffer is invalid (invalid address or too small).';
+33100   : sNcError := '33100 Function Block: Path does not contain any element.';
+33101   : sNcError := '33101 Function Block: Provided Path buffer too small for more Path Elements.';
+33102   : sNcError := '33102 Parameter: Dimension or Value of Transition Parameters is invalid.';
+33103   : sNcError := '33103 Function Block: Invalid or Incomplete Input Array.';
+33104   : sNcError := '33104 Function Block: Path length is zero.';
+33105   : sNcError := '33105 State: Command not allowed in current axis state.';
+33106   : sNcError := '33106 State: TwinCAT System is shutting down and cannot complete request.';
+33107   : sNcError := '33107 Parameter: Configured axes convention and configured axes do not match.';
+33108   : sNcError := '33108 Initialization: Invalid Number of ACS Axes. The number of ACS input axes does not match expected by kinematic transformation.';
+33109   : sNcError := '33109 Initialization: Invalid Number of MCS Data. The number of MCS input data does not match expected by kinematic transformation.';
+33110   : sNcError := '33110 Initialization: Invalid Value Set for Kinematic Parameters. Value set for parameter is outside definition range.';
+33112   : sNcError := '33112 NC Programming: Given ACS Values Cannot be Reached. Results in an invalid machine configuration.';
+33113   : sNcError := '33113 NC Programming: Set Target Positions Cannot be Reached. Reside outside the admissible working space.';
+33117   : sNcError := '33117 NC Programming: Discontinuity in ACS axes detected.';
+33120   : sNcError := '33120 NC Programming: Circle Specification in Path is invalid. Circle segment specification in interpolated path has an invalid or ambiguous description.';
+33121   : sNcError := '33121 NC Programming: Maximum stream lines reached. Refer to function block documentation for details.';
+33123   : sNcError := '33123 Function Block: Invalid First Segment. Element can only be analyzed with a well-defined start point.';
+33124   : sNcError := '33124 Function Block: Invalid auxiliary point. Auxiliary point is not well-defined.';
+33126   : sNcError := '33126 Function Block: Invalid parameter for GapControlMode.';
+33127   : sNcError := '33127 External: Group got unsupported Axis Event (e.g. State Change).';
+33128   : sNcError := '33128 Parameter: Unsupported Compensation Type. Compensation type not set or unsupported by the object.';
+33129   : sNcError := '33129 Function Block: Master axis does not exist or cannot be used.';
+33130   : sNcError := '33130 External: Invalid or Missing Tracking Transformation. Invalid object ID or unsupported coordinate transformation at CoordTransform input.';
+33131   : sNcError := '33131 Function Block: Position is not on Track. Actual or Target Position not on Track or TrackPart.';
+33132   : sNcError := '33132 Function Block: Axis does not have an activated track.';
+33133   : sNcError := '33133 NC Programming: Invalid Compensation ObjectId. Object with this ObjectId does not exist or is not of the right type.';
+33134   : sNcError := '33134 Monitoring: Axis is in error because it was not in Target when InTargetAlarm Timer expired.';
+33135   : sNcError := '33135 State: Coupling would cause a cyclic dependency of axis.';
+33136   : sNcError := '33136 Function Block: Axis was not added to an axes group. Command is not valid.';
+33151   : sNcError := '33151 State: Drive has invalid State.';
+33153   : sNcError := '33153 Function Block: Gap control parameters invalid with current configuration.';
+33154   : sNcError := '33154 Monitoring: Software position limit violation.';
+33155   : sNcError := '33155 NC Programming: Target position is not reachable. No path available or target position unreachable.';
+33157   : sNcError := '33157 NC Programming: Mover or relevant coordinates are busy.';
+33158   : sNcError := '33158 NC Programming: A collision has occurred or would occur.';
+33159   : sNcError := '33159 NC Programming: Invalid Track Specification. Geometric extension of this track is incompatible.';
+33160   : sNcError := '33160 NC Programming: Command not allowed in track state.';
+33161   : sNcError := '33161 Function Block: Invalid Reference passed to Function Block.';
+33162   : sNcError := '33162 NC Programming: Path is locked against modifications.';
+33164   : sNcError := '33164 Parameter: Position out of modulo range.';
+33165   : sNcError := '33165 Parameter: Specified value AdditionalTurns at Options input is not allowed.';
+33166   : sNcError := '33166 Function Block: Master/Slave sync position incompatible with sync direction.';
+33169   : sNcError := '33169 State: Unexpected axis state. Axis error occurred after successful reset.';
+33170   : sNcError := '33170 State: Invalid reference system.';
+33171   : sNcError := '33171 State: Position not in reference system.';
+33172   : sNcError := '33172 State: Previous command blocking execution.';
+33176   : sNcError := '33176 Parameter: Invalid index.';
+33177   : sNcError := '33177 Function Block: Command not allowed in current configuration.';
+36655..36688 : sNcError := '36655-36688 Internal: Internal Error.';
+36694   : sNcError := '36694 Internal: Internal Error.';
+36697   : sNcError := '36697 Internal: Internal Error.';
+36700..36706 : sNcError := '36700-36706 Internal: Internal Error.';
+36709   : sNcError := '36709 Internal: Internal Error.';
+36712..36814 : sNcError := '36712-36814 Internal: Internal Error.';
+36816..36863 : sNcError := '36816-36863 Internal: Internal Error.';
+
+ELSE
+	sNcError := UDINT_TO_STRING(nNcError);
+	sNcError := concat(sNcError, ' Unknown Error code');
+END_CASE
+
+</xhtml>
+                    </ST>
+                  </body>
+                  <addData>
+                    <data name="http://www.3s-software.com/plcopenxml/objectid" handleUnknown="discard">
+                      <ObjectId>135acf2c-ae89-4dbc-9162-4c1dd2649f40</ObjectId>
+                    </data>
+                  </addData>
+                </action>
+                <action name="_state">
+                  <body>
+                    <ST>
+                      <xhtml xmlns="http://www.w3.org/1999/xhtml" />
+                    </ST>
+                  </body>
+                  <addData>
+                    <data name="http://www.3s-software.com/plcopenxml/objectid" handleUnknown="discard">
+                      <ObjectId>1f4cb215-1832-4de3-a21d-b29fc348d651</ObjectId>
+                    </data>
+                  </addData>
+                </action>
+              </actions>
+              <body>
+                <ST>
+                  <xhtml xmlns="http://www.w3.org/1999/xhtml">
+_diag();
+_ethercat();
+_nc();
+_state();
+</xhtml>
+                </ST>
+              </body>
+              <addData>
+                <data name="http://www.3s-software.com/plcopenxml/objectid" handleUnknown="discard">
+                  <ObjectId>0203e723-4504-0869-2058-544846f9f699</ObjectId>
+                </data>
+              </addData>
+            </pou>
+          </data>
+          <data name="http://www.3s-software.com/plcopenxml/pou" handleUnknown="implementation">
+            <pou name="MAIN" pouType="program">
+              <interface>
+                <localVars>
+                  <variable name="Ax8206_ChA_Decoder">
+                    <type>
+                      <derived name="FB_DriveDecoder" />
+                    </type>
+                  </variable>
+                  <variable name="Ax8206_ChA_Ref">
+                    <type>
+                      <derived name="AXIS_REF" />
+                    </type>
+                  </variable>
+                  <variable name="fb_power">
+                    <type>
+                      <derived name="MC_Power" />
+                    </type>
+                  </variable>
+                  <variable name="enable_power">
+                    <type>
+                      <BOOL />
+                    </type>
+                  </variable>
+                  <variable name="fb_reset">
+                    <type>
+                      <derived name="MC_Reset" />
+                    </type>
+                  </variable>
+                  <variable name="enable_reset">
+                    <type>
+                      <BOOL />
+                    </type>
+                  </variable>
+                  <variable name="fb_move">
+                    <type>
+                      <derived name="MC_MoveVelocity" />
+                    </type>
+                  </variable>
+                  <variable name="enable_move">
+                    <type>
+                      <BOOL />
+                    </type>
+                  </variable>
+                  <variable name="fb_stop">
+                    <type>
+                      <derived name="MC_Stop" />
+                    </type>
+                  </variable>
+                  <variable name="enable_stop">
+                    <type>
+                      <BOOL />
+                    </type>
+                  </variable>
+                </localVars>
+              </interface>
+              <body>
+                <ST>
+                  <xhtml xmlns="http://www.w3.org/1999/xhtml">
+Ax8206_ChA_Ref.ReadStatus();
+Ax8206_ChA_Decoder();
+
+
+fb_power(
+	Axis:= Ax8206_ChA_Ref, 
+	Enable:= enable_power, 
+	Enable_Positive:= enable_power, 
+	Enable_Negative:= enable_power, 
+	Override:= 100
+	 );
+	
+fb_reset(
+	Axis:= Ax8206_ChA_Ref, 
+	Execute:= enable_reset 
+	);	
+	
+fb_move(
+	Axis:= Ax8206_ChA_Ref, 
+	Execute:= enable_move, 
+	Velocity:= 400, 
+	Acceleration:= 1000, 
+	Deceleration:= 1000, 
+	Jerk:= , 
+	Direction:= MC_Positive_Direction, 
+	 );	
+	 
+fb_stop(
+	Axis:= Ax8206_ChA_Ref, 
+	Execute:= enable_stop, 
+	);</xhtml>
+                </ST>
+              </body>
+              <addData>
+                <data name="http://www.3s-software.com/plcopenxml/objectid" handleUnknown="discard">
+                  <ObjectId>fa5f8517-65ee-4376-8a7a-07bf1b18776e</ObjectId>
+                </data>
+              </addData>
+            </pou>
+          </data>
+          <data name="http://www.3s-software.com/plcopenxml/libraries" handleUnknown="implementation">
+            <Libraries>
+              <Library Name="#System_VisuElemMeter" Namespace="VisuElemMeter" HideWhenReferencedAsDependency="false" PublishSymbolsInContainer="false" SystemLibrary="true" LinkAllContent="false" DefaultResolution="VisuElemMeter, 3.5.13.0 (System)" ResolverGuid="2717eb6a-dd07-4c66-8d8d-cacebd7b18ae" />
+              <Library Name="#System_VisuElems" Namespace="VisuElems" HideWhenReferencedAsDependency="false" PublishSymbolsInContainer="false" SystemLibrary="true" LinkAllContent="false" DefaultResolution="VisuElems, 3.5.13.40 (System)" ResolverGuid="2717eb6a-dd07-4c66-8d8d-cacebd7b18ae" />
+              <Library Name="#System_VisuElemsSpecialControls" Namespace="VisuElemsSpecialControls" HideWhenReferencedAsDependency="false" PublishSymbolsInContainer="false" SystemLibrary="true" LinkAllContent="false" DefaultResolution="VisuElemsSpecialControls, 3.5.13.0 (System)" ResolverGuid="2717eb6a-dd07-4c66-8d8d-cacebd7b18ae" />
+              <Library Name="#System_VisuElemsWinControls" Namespace="VisuElemsWinControls" HideWhenReferencedAsDependency="false" PublishSymbolsInContainer="false" SystemLibrary="true" LinkAllContent="false" DefaultResolution="VisuElemsWinControls, 3.5.13.20 (System)" ResolverGuid="2717eb6a-dd07-4c66-8d8d-cacebd7b18ae" />
+              <Library Name="#System_VisuElemTextEditor" Namespace="VisuElemTextEditor" HideWhenReferencedAsDependency="false" PublishSymbolsInContainer="false" SystemLibrary="true" LinkAllContent="false" DefaultResolution="VisuElemTextEditor, 3.5.13.0 (System)" ResolverGuid="2717eb6a-dd07-4c66-8d8d-cacebd7b18ae" />
+              <Library Name="#system_visuinputs" Namespace="visuinputs" HideWhenReferencedAsDependency="false" PublishSymbolsInContainer="false" SystemLibrary="true" LinkAllContent="false" DefaultResolution="visuinputs, 3.5.13.0 (system)" ResolverGuid="2717eb6a-dd07-4c66-8d8d-cacebd7b18ae" />
+              <Library Name="#System_VisuNativeControl" Namespace="VisuNativeControl" HideWhenReferencedAsDependency="false" PublishSymbolsInContainer="false" SystemLibrary="true" LinkAllContent="false" DefaultResolution="VisuNativeControl, 3.5.13.0 (System)" ResolverGuid="2717eb6a-dd07-4c66-8d8d-cacebd7b18ae" />
+              <Library Name="#Tc2_Drive" Namespace="Tc2_Drive" HideWhenReferencedAsDependency="false" PublishSymbolsInContainer="false" SystemLibrary="false" LinkAllContent="false" DefaultResolution="Tc2_Drive, * (Beckhoff Automation GmbH)" />
+              <Library Name="#Tc2_MC2" Namespace="Tc2_MC2" HideWhenReferencedAsDependency="false" PublishSymbolsInContainer="false" SystemLibrary="false" LinkAllContent="false" DefaultResolution="Tc2_MC2, * (Beckhoff Automation GmbH)" />
+              <Library Name="#Tc2_Standard" Namespace="Tc2_Standard" HideWhenReferencedAsDependency="false" PublishSymbolsInContainer="false" SystemLibrary="false" LinkAllContent="false" DefaultResolution="Tc2_Standard, * (Beckhoff Automation GmbH)" />
+              <Library Name="#Tc2_System" Namespace="Tc2_System" HideWhenReferencedAsDependency="false" PublishSymbolsInContainer="false" SystemLibrary="false" LinkAllContent="false" DefaultResolution="Tc2_System, * (Beckhoff Automation GmbH)">
+                <Parameters>
+                  <Parameter Name="PARAM.TABLE_UPPER_BOUND" Value="15" />
+                  <Parameter Name="PARAM.STRING_LENGTH_EXP" Value="255" />
+                  <Parameter Name="PARAM.STRING_LENGTH_ADDRESS" Value="20" />
+                  <Parameter Name="PARAM.STRING_LENGTH_COMMENT" Value="255" />
+                  <Parameter Name="PARAM.STRING_LENGTH_OUTSTRING" Value="255" />
+                  <Parameter Name="PARAM.TABLE_SHOW_VALID_ITEMS" Value="FALSE" />
+                </Parameters>
+              </Library>
+              <Library Name="#Tc3_Module" Namespace="Tc3_Module" HideWhenReferencedAsDependency="false" PublishSymbolsInContainer="false" SystemLibrary="false" LinkAllContent="false" DefaultResolution="Tc3_Module, * (Beckhoff Automation GmbH)" />
+              <addData>
+                <data name="http://www.3s-software.com/plcopenxml/objectid" handleUnknown="discard">
+                  <ObjectId>bade54e6-471f-4a47-a76e-a7bf9a33fdb0</ObjectId>
+                </data>
+              </addData>
+            </Libraries>
+          </data>
+          <data name="http://www.3s-software.com/plcopenxml/objectid" handleUnknown="discard">
+            <ObjectId>502e4543-61f2-489c-8e9c-9d6958c80c62</ObjectId>
+          </data>
+        </addData>
+      </resource>
+    </data>
+    <data name="http://www.3s-software.com/plcopenxml/projectstructure" handleUnknown="discard">
+      <ProjectStructure>
+        <Object Name="PLC1" ObjectId="502e4543-61f2-489c-8e9c-9d6958c80c62">
+          <Object Name="Library Manager" ObjectId="bade54e6-471f-4a47-a76e-a7bf9a33fdb0" />
+          <Object Name="FB_DriveDecoder" ObjectId="0203e723-4504-0869-2058-544846f9f699">
+            <Object Name="_diag" ObjectId="6a0391c1-a9a7-4fb6-b481-78d89c25331b" />
+            <Object Name="_ethercat" ObjectId="d4aced07-e856-09b1-046b-f4f1db871967" />
+            <Object Name="_nc" ObjectId="135acf2c-ae89-4dbc-9162-4c1dd2649f40" />
+            <Object Name="_state" ObjectId="1f4cb215-1832-4de3-a21d-b29fc348d651" />
+          </Object>
+          <Object Name="PlcTask" ObjectId="32b43971-3e1d-489c-ae19-af1319d258df" />
+          <Folder Name="POUs">
+            <Object Name="MAIN" ObjectId="fa5f8517-65ee-4376-8a7a-07bf1b18776e" />
+          </Folder>
+        </Object>
+      </ProjectStructure>
+    </data>
+  </addData>
+</project>
