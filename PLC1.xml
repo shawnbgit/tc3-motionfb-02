@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <project xmlns="http://www.plcopen.org/xml/tc6_0200">
-  <fileHeader companyName="Beckhoff Automation GmbH" productName="TwinCAT PLC Control" productVersion="3.5.13.21" creationDateTime="2024-06-17T10:11:27.1833911" />
-  <contentHeader name="PLC1" modificationDateTime="2024-06-17T10:11:27.1873894">
+  <fileHeader companyName="Beckhoff Automation GmbH" productName="TwinCAT PLC Control" productVersion="3.5.13.21" creationDateTime="2024-06-17T11:56:50.0455215" />
+  <contentHeader name="PLC1" modificationDateTime="2024-06-17T11:56:50.0455215">
     <coordinateInfo>
       <fbd>
         <scaling x="1" y="1" />
@@ -1666,7 +1666,7 @@ fb_reset(
 fb_move(
 	Axis:= Ax8206_ChA_Ref, 
 	Execute:= enable_move, 
-	Velocity:= 400, 
+	Velocity:= 100, 
 	Acceleration:= 1000, 
 	Deceleration:= 1000, 
 	Jerk:= , 
