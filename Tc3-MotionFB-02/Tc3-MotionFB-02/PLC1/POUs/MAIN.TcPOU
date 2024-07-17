@@ -1,0 +1,54 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <POU Name="MAIN" Id="{fa5f8517-65ee-4376-8a7a-07bf1b18776e}" SpecialFunc="None">
+    <Declaration><![CDATA[PROGRAM MAIN
+VAR
+	Ax8206_ChA_Decoder : FB_DriveDecoder;
+	Ax8206_ChA_Ref : AXIS_REF;
+	
+	fb_power : MC_Power;
+	enable_power : BOOL;
+	fb_reset : MC_Reset;
+	enable_reset : BOOL;
+	fb_move : MC_MoveVelocity;
+	enable_move : BOOL;
+	fb_stop : MC_Stop;
+	enable_stop : BOOL;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[
+Ax8206_ChA_Ref.ReadStatus();
+Ax8206_ChA_Decoder();
+
+
+fb_power(
+	Axis:= Ax8206_ChA_Ref, 
+	Enable:= enable_power, 
+	Enable_Positive:= enable_power, 
+	Enable_Negative:= enable_power, 
+	Override:= 100
+	 );
+	
+fb_reset(
+	Axis:= Ax8206_ChA_Ref, 
+	Execute:= enable_reset 
+	);	
+	
+fb_move(
+	Axis:= Ax8206_ChA_Ref, 
+	Execute:= enable_move, 
+	Velocity:= 100, 
+	Acceleration:= 1000, 
+	Deceleration:= 1000, 
+	Jerk:= , 
+	Direction:= MC_Positive_Direction, 
+	 );	
+	 
+fb_stop(
+	Axis:= Ax8206_ChA_Ref, 
+	Execute:= enable_stop, 
+	);]]></ST>
+    </Implementation>
+  </POU>
+</TcPlcObject>
